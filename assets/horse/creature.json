@@ -1,0 +1,116 @@
+{
+ "name": "horse",
+ "prep": {
+  "length_m": 2.4,
+  "rotz_deg": 0,
+  "axis": "y"
+ },
+ "noun": "horse",
+ "layout": {
+  "W_FRONT": 420,
+  "W_SIDE": 860,
+  "M_PER_PX": 0.0045,
+  "GROUND_V": 640
+ },
+ "paint": {
+  "FL": {
+   "color": "#F53CD1",
+   "bones": [
+    "upperarm_L",
+    "forearm_L",
+    "metacarpus_L",
+    "fpaw_L"
+   ]
+  },
+  "FR": {
+   "color": "#2F6BFF",
+   "bones": [
+    "upperarm_R",
+    "forearm_R",
+    "metacarpus_R",
+    "fpaw_R"
+   ]
+  },
+  "HL": {
+   "color": "#FFD21F",
+   "bones": [
+    "thigh_L",
+    "shin_L",
+    "metatarsus_L",
+    "hpaw_L"
+   ]
+  },
+  "HR": {
+   "color": "#19D3E0",
+   "bones": [
+    "thigh_R",
+    "shin_R",
+    "metatarsus_R",
+    "hpaw_R"
+   ]
+  }
+ },
+ "feet": [
+  "fpaw_L",
+  "fpaw_R",
+  "hpaw_L",
+  "hpaw_R"
+ ],
+ "contacts": [
+  "ftoe_L",
+  "ftoe_R",
+  "htoe_L",
+  "htoe_R",
+  "fpaw_L",
+  "fpaw_R",
+  "hpaw_L",
+  "hpaw_R"
+ ],
+ "describe": "a muscular bay horse with a glossy dark brown coat, black lower legs and hooves, a short roached mane and a short tail",
+ "colour_code": "front-left leg pink, front-right leg blue, hind-left leg yellow, hind-right leg cyan",
+ "count": "Exactly four legs, one tail, one head. No saddle, no bridle, no rider, no dust.",
+ "flank": "flank",
+ "limbs": "legs",
+ "testpose": {
+  "upperarm_L": [
+   -40,
+   0,
+   0
+  ],
+  "forearm_L": [
+   -90,
+   0,
+   0
+  ],
+  "metacarpus_L": [
+   100,
+   0,
+   0
+  ],
+  "thigh_R": [
+   30,
+   0,
+   0
+  ],
+  "shin_R": [
+   60,
+   0,
+   0
+  ],
+  "metatarsus_R": [
+   -70,
+   0,
+   0
+  ],
+  "neck1": [
+   25,
+   0,
+   15
+  ],
+  "tail1": [
+   -30,
+   0,
+   0
+  ]
+ }
+}

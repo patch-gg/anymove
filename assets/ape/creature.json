@@ -1,0 +1,112 @@
+{
+ "name": "ape",
+ "prep": {
+  "length_m": 2.4,
+  "rotz_deg": -90,
+  "axis": "z"
+ },
+ "paint": {
+  "AL": {
+   "color": "#F53CD1",
+   "bones": [
+    "upperarm_L",
+    "forearm_L",
+    "hand_L"
+   ]
+  },
+  "AR": {
+   "color": "#2F6BFF",
+   "bones": [
+    "upperarm_R",
+    "forearm_R",
+    "hand_R"
+   ]
+  },
+  "LL": {
+   "color": "#FFD21F",
+   "bones": [
+    "thigh_L",
+    "shin_L",
+    "foot_L",
+    "toe_L"
+   ]
+  },
+  "LR": {
+   "color": "#19D3E0",
+   "bones": [
+    "thigh_R",
+    "shin_R",
+    "foot_R",
+    "toe_R"
+   ]
+  }
+ },
+ "flank": "side",
+ "limbs": "limbs",
+ "colour_code": "left arm pink, right arm blue, left leg yellow, right leg cyan",
+ "noun": "giant ape",
+ "layout": {
+  "W_FRONT": 560,
+  "W_SIDE": 720,
+  "M_PER_PX": 0.0058,
+  "GROUND_V": 640
+ },
+ "feet": [
+  "handtip_L",
+  "handtip_R",
+  "ankle_L",
+  "ankle_R"
+ ],
+ "contacts": [
+  "handtip_L",
+  "handtip_R",
+  "wrist_L",
+  "wrist_R",
+  "ankle_L",
+  "ankle_R",
+  "ball_L",
+  "ball_R",
+  "toetip_L",
+  "toetip_R"
+ ],
+ "describe": "a giant silverback gorilla-like ape with short dark grey-black fur and a silver back, massively muscular, standing on its knuckles",
+ "count": "Exactly two arms, two legs, one head. No other animals, no props.",
+ "testpose": {
+  "upperarm_L": [
+   -90,
+   0,
+   0
+  ],
+  "forearm_L": [
+   -100,
+   0,
+   0
+  ],
+  "spine2": [
+   -20,
+   0,
+   0
+  ],
+  "chest": [
+   -20,
+   0,
+   15
+  ],
+  "thigh_R": [
+   -40,
+   0,
+   0
+  ],
+  "shin_R": [
+   60,
+   0,
+   0
+  ],
+  "head": [
+   0,
+   30,
+   0
+  ]
+ },
+ "fix_front_swaps": true
+}

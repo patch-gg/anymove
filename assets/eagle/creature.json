@@ -1,0 +1,107 @@
+{
+ "name": "eagle",
+ "prep": {
+  "length_m": 2.2,
+  "rotz_deg": -90,
+  "axis": "x"
+ },
+ "noun": "golden eagle",
+ "layout": {
+  "W_FRONT": 720,
+  "W_SIDE": 560,
+  "M_PER_PX": 0.004,
+  "GROUND_V": 640
+ },
+ "paint": {
+  "WL": {
+   "color": "#F53CD1",
+   "bones": [
+    "wing_arm_L",
+    "wing_fore_L",
+    "finger1_L",
+    "finger2_L",
+    "secondary_L"
+   ]
+  },
+  "WR": {
+   "color": "#2F6BFF",
+   "bones": [
+    "wing_arm_R",
+    "wing_fore_R",
+    "finger1_R",
+    "finger2_R",
+    "secondary_R"
+   ]
+  },
+  "LL": {
+   "color": "#FFD21F",
+   "bones": [
+    "thigh_L",
+    "tarsus_L",
+    "toe_L"
+   ]
+  },
+  "LR": {
+   "color": "#19D3E0",
+   "bones": [
+    "thigh_R",
+    "tarsus_R",
+    "toe_R"
+   ]
+  }
+ },
+ "feet": [
+  "foot_L",
+  "foot_R",
+  "f1_L",
+  "f1_R"
+ ],
+ "contacts": [
+  "foot_L",
+  "foot_R",
+  "toetip_L",
+  "toetip_R"
+ ],
+ "describe": "a golden eagle with dark brown feathers, a golden-brown head, a hooked yellow beak and yellow feet with black talons",
+ "colour_code": "left wing pink, right wing blue, left leg yellow, right leg cyan",
+ "count": "Exactly two wings, two legs, one tail, one head. No other birds, no prey, no feathers flying off.",
+ "flank": "side",
+ "limbs": "limbs",
+ "testpose": {
+  "wing_arm_L": [
+   60,
+   0,
+   0
+  ],
+  "wing_fore_L": [
+   0,
+   0,
+   40
+  ],
+  "wing_arm_R": [
+   -40,
+   0,
+   30
+  ],
+  "thigh_R": [
+   -40,
+   0,
+   0
+  ],
+  "tarsus_R": [
+   60,
+   0,
+   0
+  ],
+  "neck": [
+   20,
+   20,
+   0
+  ],
+  "tail1": [
+   25,
+   0,
+   0
+  ]
+ }
+}

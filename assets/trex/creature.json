@@ -1,0 +1,116 @@
+{
+ "name": "T-rex",
+ "noun": "Tyrannosaurus rex",
+ "prep": {
+  "length_m": 12.0,
+  "rotz_deg": 0,
+  "axis": "y"
+ },
+ "layout": {
+  "W_FRONT": 480,
+  "W_SIDE": 800,
+  "M_PER_PX": 0.017,
+  "GROUND_V": 640
+ },
+ "paint": {
+  "LL": {
+   "color": "#F53CD1",
+   "bones": [
+    "thigh_L",
+    "shin_L",
+    "metatarsus_L",
+    "hpaw_L"
+   ]
+  },
+  "LR": {
+   "color": "#2F6BFF",
+   "bones": [
+    "thigh_R",
+    "shin_R",
+    "metatarsus_R",
+    "hpaw_R"
+   ]
+  },
+  "AL": {
+   "color": "#FFD21F",
+   "bones": [
+    "upperarm_L",
+    "forearm_L"
+   ]
+  },
+  "AR": {
+   "color": "#19D3E0",
+   "bones": [
+    "upperarm_R",
+    "forearm_R"
+   ]
+  }
+ },
+ "feet": [
+  "hpaw_L",
+  "hpaw_R"
+ ],
+ "describe": "a huge photorealistic Tyrannosaurus rex with dark olive-brown scaly skin and a paler belly, a massive head, two tiny arms and a long heavy tail",
+ "colour_code": "left leg pink, right leg blue, tiny left arm yellow, tiny right arm cyan",
+ "count": "Exactly two legs, two tiny arms, one tail, one head. No other animals, no dust, no debris.",
+ "flank": "flank",
+ "limbs": "limbs",
+ "testpose": {
+  "thigh_L": [
+   -40,
+   0,
+   0
+  ],
+  "shin_L": [
+   60,
+   0,
+   0
+  ],
+  "metatarsus_L": [
+   -50,
+   0,
+   0
+  ],
+  "hpaw_L": [
+   30,
+   0,
+   0
+  ],
+  "thigh_R": [
+   30,
+   0,
+   0
+  ],
+  "jaw": [
+   35,
+   0,
+   0
+  ],
+  "neck1": [
+   20,
+   0,
+   15
+  ],
+  "upperarm_R": [
+   -40,
+   0,
+   20
+  ],
+  "forearm_R": [
+   -60,
+   0,
+   0
+  ],
+  "tail2": [
+   0,
+   0,
+   30
+  ],
+  "tail4": [
+   15,
+   0,
+   -25
+  ]
+ },
+ "fix_front_swaps": true
+}

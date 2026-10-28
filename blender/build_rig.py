@@ -96,6 +96,28 @@ for _ in range(3):
     np.add.at(acc, E[:, 0], W[E[:, 1]])
     np.add.at(acc, E[:, 1], W[E[:, 0]])
     W = 0.5 * W + 0.5 * acc / deg
+if hasattr(common, "_c") and common._c.get("rigid"):
+    # rigid parts (creature.json "rigid": true, e.g. a mech): every separate piece of the mesh follows the one bone
+    # that holds most of its weight, and the rest of the surface follows its strongest bone, with no blending
+    lab = np.arange(nv)
+    def root(a):
+        while lab[a] != a:
+            lab[a] = lab[lab[a]]
+            a = lab[a]
+        return a
+    for a, b in E:
+        ra, rb = root(a), root(b)
+        if ra != rb:
+            lab[ra] = rb
+    comp = np.array([root(i) for i in range(nv)])
+    hard = W.argmax(1)
+    for c in np.unique(comp):
+        idx = np.nonzero(comp == c)[0]
+        if len(idx) < 0.15 * nv:
+            hard[idx] = W[idx].sum(0).argmax()
+    W = np.zeros_like(W)
+    W[np.arange(nv), hard] = 1.0
+    print("rigid skin:", len(np.unique(comp)), "pieces")
 keep = np.argsort(-W, axis=1)[:, :4]
 mask = np.zeros_like(W, bool)
 np.put_along_axis(mask, keep, True, axis=1)
@@ -117,6 +139,8 @@ print("saved", out / "rigged.blend")
 test = {"upperarm_L": (-30, 0, 0), "forearm_L": (-70, 0, 0), "metacarpus_L": (90, 0, 0),
         "thigh_R": (-35, 0, 0), "shin_R": (60, 0, 0), "metatarsus_R": (-60, 0, 0),
         "neck1": (25, 0, 0), "head": (20, 0, 15), "tail1": (-30, 0, 0), "tail2": (-20, 0, 10)}
+if CREATURE_TESTPOSE := (common._c.get("testpose") if hasattr(common, "_c") else None):  # creature.json "testpose"
+    test = CREATURE_TESTPOSE
 for name, deg in [(n, d) for n, d in test.items() if n in arm.pose.bones]:
     pb = arm.pose.bones[name]
     pb.rotation_mode = "XYZ"
