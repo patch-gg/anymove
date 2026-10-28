@@ -65,7 +65,7 @@ scene.render.resolution_x, scene.render.resolution_y = w, h
 scene.render.image_settings.file_format = "PNG"
 scene.render.image_settings.color_mode = "RGBA"
 fov = 2 * math.atan(36 / 2 / cam.data.lens)          # horizontal, 36 mm sensor
-dist = radius / math.tan(min(fov, fov * h / w) / 2) * 0.64
+dist = radius / math.tan(min(fov, fov * h / w) / 2) * float(__import__("os").environ.get("TURNTABLE_FRAME", 0.64))  # 0.64: a close-up
 passes = [(out, None)]
 if mode == "bones":   # the ghost (mesh only, x-ray), then the bones alone and solid
     passes = [(out, False), (out / "sticks", True)]
