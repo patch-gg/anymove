@@ -158,7 +158,7 @@ def runs(mask, fill=2, shortest=4):
     return out
 
 
-def find_contacts(J, cidx, h0, fps=24):
+def find_contacts(J, cidx, h0, fps=24, hysteresis=1.0):
     """Planted frames per contact joint from a first fit, and the ground's own velocity: on a clip filmed "on the spot"
     the planted feet ride backwards together like on a treadmill, so a foot is planted when it is near its rest
     height and moving with the others. Returns per-joint lists of (start, end) frame runs and the ground velocity in
@@ -173,7 +173,17 @@ def find_contacts(J, cidx, h0, fps=24):
     g = np.median(v[near], axis=0) if near.sum() >= 10 else np.zeros(2)
     if np.linalg.norm(g) < 0.25 * tol_v:
         g = np.zeros(2)
-    planted = near & (np.linalg.norm(v - g, axis=-1) < tol_v)
+    rel = np.linalg.norm(v - g, axis=-1)
+    planted = near & (rel < tol_v)
+    if hysteresis > 1:  # grow each plant while the foot stays down and only a little faster (the whole stance, not its still core)
+        loose = (P[..., 2] - h0[None]) < tol_z * hysteresis
+        loose &= rel < tol_v * hysteresis
+        for k in range(len(cidx)):
+            grown = np.zeros(T, bool)
+            for a, b in runs(loose[:, k]):
+                if planted[a:b, k].any():
+                    grown[a:b] = True
+            planted[:, k] = grown
     return [runs(planted[:, k]) for k in range(len(cidx))], g
 
 
@@ -428,7 +438,7 @@ def ik_init(tri, root_aa, info, rig):
 
 
 def fit(d, info, iters=1500, dev="cpu", log=True, front_height_weight=0.25, fps=24, plant_iters=600, plant=True,
-        far_side_weight=1.0):
+        far_side_weight=1.0, joint_weight=None, joint_sigma=None, plant_hysteresis=1.0):
     rig = Rig(info, dev)
     names = rig.kp_names
     T = len(d["front_uv"])
@@ -436,6 +446,15 @@ def fit(d, info, iters=1500, dev="cpu", log=True, front_height_weight=0.25, fps=
     s_obs = torch.tensor(d["side_uv"], dtype=torch.float64, device=dev)
     f_c = torch.tensor(d["front_conf"], dtype=torch.float64, device=dev).clamp(0, 1) ** 2
     s_c = torch.tensor(d["side_conf"], dtype=torch.float64, device=dev).clamp(0, 1) ** 2
+    jw = torch.ones(len(names), dtype=torch.float64, device=dev)  # per-joint data weight and robust-scale multiplier
+    js = torch.ones(len(names), dtype=torch.float64, device=dev)
+    for spec, vec in ((joint_weight, jw), (joint_sigma, js)):
+        for pre, val in (spec or {}).items():
+            for i, n in enumerate(names):
+                if n.startswith(pre):
+                    vec[i] = val
+    f_c = f_c * jw
+    s_c = s_c * jw
     if far_side_weight != 1.0:  # the side camera sees the right flank: _L joints are behind the body there
         far = [i for i, n in enumerate(names) if n.endswith("_L")]
         s_c[:, far] *= far_side_weight
@@ -468,7 +487,8 @@ def fit(d, info, iters=1500, dev="cpu", log=True, front_height_weight=0.25, fps=
         pf, ps = project(J)
         rf = ((pf - f_obs) ** 2 * f_axis).sum(-1)
         rs = ((ps - s_obs) ** 2).sum(-1)
-        data = (f_c * torch.log1p(rf / sigma ** 2)).sum() + (s_c * torch.log1p(rs / sigma ** 2)).sum()
+        sj = (sigma * js) ** 2  # a joint with a wider robust scale is not written off as an outlier when it is far off
+        data = (f_c * torch.log1p(rf / sj)).sum() + (s_c * torch.log1p(rs / sj)).sum()
         acc = ((J[2:] - 2 * J[1:-1] + J[:-2]) ** 2).sum() / layout.M_PER_PX ** 2 * 0.02
         vel = ((eul[1:] - eul[:-1]) ** 2).sum() * 2.0 + ((root[1:] - root[:-1]) ** 2).sum() * 2.0
         prior = (eul ** 2).sum() * 0.05
@@ -496,7 +516,7 @@ def fit(d, info, iters=1500, dev="cpu", log=True, front_height_weight=0.25, fps=
     runs_, g = [[] for _ in cidx], np.zeros(2)
     if plant and cidx:
         # stage 2: find where each contact joint is planted in the first fit, then hold it there while refitting
-        runs_, g = find_contacts(J.detach().cpu().numpy(), cidx, h0, fps)
+        runs_, g = find_contacts(J.detach().cpu().numpy(), cidx, h0, fps, plant_hysteresis)
         tgt = np.zeros((T, len(cidx), 3))
         w = np.zeros((T, len(cidx)))
         Jn = J.detach().cpu().numpy()
@@ -563,6 +583,13 @@ def to_quat(Rm):
     return np.array(q)
 
 
+def kv(flag):
+    """--joint-weight tail=4,jaw=2 -> {"tail": 4.0, "jaw": 2.0} (joint-name prefixes)"""
+    if flag not in sys.argv:
+        return None
+    return {k: float(v) for k, v in (x.split("=") for x in sys.argv[sys.argv.index(flag) + 1].split(","))}
+
+
 def main():
     det_path, info_path, out = sys.argv[1:4]
     raw = np.load(det_path)
@@ -601,7 +628,9 @@ def main():
     fhw = float(sys.argv[sys.argv.index("--front-height-weight") + 1]) if "--front-height-weight" in sys.argv else 0.25
     res = fit(d, info, dev="cuda" if torch.cuda.is_available() else "cpu", fps=float(raw["fps"]),
               plant="--no-plant" not in sys.argv, front_height_weight=fhw,
-              far_side_weight=float(sys.argv[sys.argv.index("--far-side-weight") + 1]) if "--far-side-weight" in sys.argv else 1.0)
+              far_side_weight=float(sys.argv[sys.argv.index("--far-side-weight") + 1]) if "--far-side-weight" in sys.argv else 1.0,
+              joint_weight=kv("--joint-weight"), joint_sigma=kv("--joint-sigma"),
+              plant_hysteresis=float(sys.argv[sys.argv.index("--plant-hysteresis") + 1]) if "--plant-hysteresis" in sys.argv else 1.0)
     print("reprojection error px:", {k: round(v, 2) for k, v in res["reproj_px"].items()})
     print("reprojection error px, confident readings only:", {k: round(v, 2) for k, v in res["reproj_confident_px"].items()})
     print("planted foot slide cm/frame:", res["contacts"]["slide_cm"])
