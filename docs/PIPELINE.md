@@ -23,7 +23,7 @@ it, every module falls back to the wolf's layout (420 + 860 px, 1.9 m of height 
 
 | file | written by | holds |
 |---|---|---|
-| `assets/<c>/model.glb` | Tripo or any generator | the textured mesh |
+| `assets/<c>/model.glb` | `tools/mesh.sh` (Rodin first, fal Tripo fallback), or your own generator | the textured mesh |
 | `assets/<c>/creature.json` | you | `prep` (length_m, rotz_deg, axis), `layout`, `paint` (limb groups: colour + bones), `feet`, prompt words (`name`, `noun`, `describe`, `colour_code`, `count`, `flank`, `limbs`), the 3/4 showcase `camera` |
 | `assets/<c>/rig.json` | you | `joints` (metres, -Y forward, +X left), `bones` [name, head, tail, parent], `limits_deg` per bone or stem |
 | `assets/<c>/prep/static.blend` | `blender/prep_mesh.py` | the mesh at real size, facing -Y, on the ground |
@@ -34,6 +34,8 @@ it, every module falls back to the wolf's layout (420 + 860 px, 1.9 m of height 
 
 | stage | code | reads | writes |
 |---|---|---|---|
+| mesh | `tools/mesh.sh`, `mocap/mesh.py`, `mocap/rodin.py` | concept image | `assets/<c>/model.glb`, private Rodin task in `runs/<c>/rodin.json`, fallback task in `runs/<c>/rodin.tripo.json` |
+| rig (optional API) | `mocap/rig.py`, `blender/import_rig.py` | model or saved Rodin asset + rig.json hierarchy | rigged.blend, rig_info.json; private task in `runs/<c>/rigging.json` |
 | reference frame | `blender/render_ref.py`, `tools/compose_ref.py` | rigged.blend | `runs/<c>/ref/ref.png` |
 | prompt | `tools/make_prompt.py` | creature.json + one action sentence | `prompts/<c>/<move>.txt` |
 | video | `mocap/generate.py` (fal queue client in `mocap/fal.py`) | ref.png + prompt | `runs/<c>/videos/<move>/s<seed>/<model>.mp4` |

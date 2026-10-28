@@ -2,7 +2,7 @@
 name: anymove-rig
 description: Set up a new creature for anymove - get a textured mesh, scale and face it, place its skeleton in rig.json with grid views, build and skin the rig in Blender, paint each limb its own colour, choose the two-camera framing, and render the reference frame the video model starts from. Use when adding a creature to anymove, when a rig tears or deforms badly, when the creature is cut off or tiny in the two-camera frame, or when someone asks how to rig a non-humanoid for anymove.
 license: Apache-2.0
-compatibility: Blender 5.x on PATH (or BLENDER=...), Python 3.11 venv from requirements.txt. A fal.ai key only if the mesh is generated with Tripo.
+compatibility: Blender 5.x on PATH (or BLENDER=...), Python 3.11 venv from requirements.txt. Rodin uses the public vibecoding evaluation key or RODIN_API_KEY; Tripo fallback and video use FAL_KEY.
 ---
 
 # anymove-rig: one creature, ready to film
@@ -13,9 +13,14 @@ for the prompt), `rig.json` (the skeleton). Copy a close example to start: `asse
 
 ## 1. The mesh
 
-- Any textured GLB works. anymove's examples are Tripo H3.1 (`tripo3d/h3.1/image-to-3d` on fal, $0.40 with HD
-  texture) from one FLUX 3 concept image: a plain 3/4 view of the creature on a neutral background, whole body in
-  frame, limbs apart and clearly separate.
+- Any textured GLB works. To make one, copy a close example config, then run `tools/mesh.sh <c> concept.png`.
+  Rodin Gen-2.5 runs first with the public `vibecoding` evaluation key (usage limits); `RODIN_API_KEY` in `.env`
+  or the environment overrides it. Rejected/failed generations fall back to Tripo H3.1 on fal (`FAL_KEY`, about
+  $0.40 with detailed textures). The mesh lands in `assets/<c>/model.glb`.
+- Use a plain 3/4 concept picture on a neutral background: whole body in frame, limbs apart and clearly separate.
+  The bundled meshes are Tripo H3.1; a new mesh needs new joint placement.
+- After an interruption, repeat with `--resume`. Tasks are saved in `runs/<c>/rodin.json` or `rodin.tripo.json`;
+  keep them private. A pending task or download error is resumed, without submitting another generation.
 - Prefer a design where every limb reads separately. Fire, smoke, capes, weapons and long hair hide joints from the
   reader later; leave them to game VFX.
 
@@ -30,11 +35,22 @@ tools/prep.sh <c>        # assets/<c>/prep/static.blend, verts.npy, and views.pn
 ```
 
 Check `assets/<c>/prep/views.png`: in the side view the head is on the right, the feet sit on z = 0, and both feet of a
-pair are level in the front view. Tripo's `align_image` orientation can leave a creature turned a few degrees; fix
+pair are level in the front view. Generated meshes can arrive at a different orientation; fix
 `rotz_deg` until the feet are level (the demon needed -73, not -90). If unsure which way it faces, run
 `blender -b -P blender/inspect_mesh.py -- assets/<c>/model.glb runs/<c>/inspect` and look at the four views.
 
 ## 3. The skeleton: rig.json
+
+For automatic placement and skinning, keep the closest example's bone names, hierarchy, limits and paint groups,
+then run `tools/rig.sh <c> rodin`. Rodin uses the named hierarchy from `rig.json` (including mirrored `_R` bones),
+places it on the mesh, and writes the usual `rigged.blend`, `rig_info.json` and reference frame. The joint positions
+in `rig.json` are used by the Blender route; the Rodin route records its predicted positions in `rig_info.json`.
+It reuses a saved Rodin generation and its textures. Other meshes are uploaded without textures, or pass
+`--image concept.png` to generate PBR textures. Use `--resume` after an interruption; the task is saved privately
+in `runs/<c>/rigging.json`. Check facing, paint and joint limits before training a new reader. Own-key rigging costs
+0.5 credit; the public evaluation key has usage limits.
+
+For hand placement with Blender:
 
 Metres in the prepped mesh's frame: the creature faces -Y, its left is +X, Z is up, the ground is z = 0.
 
@@ -105,4 +121,5 @@ Last, `"camera": {"cam": "-5.4,-6.0,1.4", "target": "0,-0.3,1.5", "lens": 32}` i
   or a joint sits outside the limb.
 - A limb half painted: the paint group misses a bone, or the weights spill onto the body; move the joint, rebuild.
 - The rig bends the wrong way: the bone's local X isn't the bending axis. Keep bones of a limb in one plane.
-- Automatic rigging (UniRig) can replace hand placement; its install pulls prebuilt flash-attn wheels from GitHub.
+- Rodin rigging keeps bone names but predicts positions and local axes. Check limb paint and adjust local joint
+  limits for the new rig; train a new reader instead of reusing one trained on another mesh or skeleton.

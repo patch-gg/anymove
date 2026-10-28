@@ -78,12 +78,17 @@ tools/capture.sh dragon runs/dragon/videos/tailwhip/s1/h3max.mp4 tailwhip
 ## your own creature.
 
 Copy the closest example in `assets/` (wolf: four legs; dragon: four legs and wings; spider: eight legs; demon: two
-legs, two arms, wings and a tail), put your mesh at `assets/<name>/model.glb`, and work through:
+legs, two arms, wings and a tail). Bring your own `assets/<name>/model.glb`, or make one from a concept picture:
+Rodin Gen-2.5 runs first with the public `vibecoding` evaluation key; rejected or failed generations fall back to
+Tripo H3.1 on fal (`FAL_KEY`, about $0.40 with detailed textures). Use a plain 3/4 view, whole body in frame, limbs
+apart on a neutral background.
 
 ```bash
+tools/mesh.sh <name> concept.png  # optional: generate model.glb if you do not have one
 tools/prep.sh <name>              # set "prep" in creature.json first: real size, facing -Y
 # place joints in assets/<name>/rig.json on the grid views; check with: tools/rig.sh <name> preview
 tools/rig.sh <name>               # build, skin, paint, reference frame
+# or: tools/rig.sh <name> rodin    # Rodin rigging, same rigged.blend/rig_info.json and reference frame
 tools/dataset.sh <name>           # 2,200 random poses, about 25 min
 tools/train.sh <name>             # the joint reader, about 20 min
 tools/film.sh <name> <move>       # after tools/make_prompt.py writes prompts/<name>/<move>.txt
@@ -91,6 +96,16 @@ tools/capture.sh <name> runs/<name>/videos/<move>/s1/h3max.mp4 <move>
 ```
 
 The skills below walk an agent (or you) through each step, with the checks that tell a good capture from a bad one.
+
+Set `RODIN_API_KEY` in `.env` or the environment to use your own key; otherwise the public evaluation key has
+usage limits. If a run is interrupted, repeat `tools/mesh.sh` with `--resume`: it reuses the saved Rodin or Tripo
+task in `runs/<name>/rodin*.json`. Keep those task files private. New meshes need new joint placement
+with the Blender route; the Rodin route places the bones from the named hierarchy in `rig.json`.
+
+Rodin rigging reuses a saved Rodin mesh task and its textures when available. For a mesh from another generator,
+it uploads `model.glb` without textures; pass `--image concept.png` to make new PBR textures. Repeat
+`tools/rig.sh <name> rodin --resume` after an interruption. Check facing, limb paint and joint limits before
+training a new reader; an old reader was trained on the old skeleton. Rigging costs 0.5 credit with your own key.
 
 ## agent skills.
 
@@ -130,7 +145,7 @@ studio and reads it back.
 
 | | |
 |---|---|
-| a mesh, Tripo H3.1 with HD texture | $0.40 |
+| a mesh, Rodin Gen-2.5 / Tripo H3.1 with HD texture | public evaluation key / $0.40 on fal |
 | a 5 s two-camera clip, MiniMax H3 Max | about $0.26 (H3: $0.30) |
 | training renders, 2,200 poses x 2 views | about 25 min on one RTX 4090 |
 | the joint reader, 20 epochs | 17-20 min, 12 GB |
@@ -145,8 +160,8 @@ Prices on fal as of October 2026.
   gestures work best: rearing, roaring, slamming, taking off, pouncing.
 - **Lying down doesn't fit.** The reader learns from random poses inside the joint limits, which don't include lying on
   a side; the wolf's death and lie-down clips failed.
-- **Skeletons are placed by hand** on grid views (`tools/prep.sh`, `tools/rig.sh preview`). UniRig could do it; its
-  install pulls prebuilt flash-attn wheels.
+- **The Blender route places skeletons by hand** on grid views (`tools/prep.sh`, `tools/rig.sh preview`).
+  `tools/rig.sh <name> rodin` can place and skin the named skeleton instead; check its result before training.
 - **Video models drift.** Plain MiniMax H3 swapped the limb colours on 2 of 5 wolf clips; with the LoRA, 0 of 5 (one
   seed per move: a first read, not a benchmark). Seedance 2.5 played the views out of step on a trot.
 - **The LoRA's data is AI-derived.** Its training clips re-render motions solved from AI clips, so the halves are in

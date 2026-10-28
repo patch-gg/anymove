@@ -16,8 +16,8 @@ height, and together they pin the joint in 3D. The method is @CanItCode's; the L
 
 | step | once per | what happens | skill |
 |---|---|---|---|
-| 1. mesh | creature | a textured 3D model (Tripo H3.1 from one image, or your own GLB), facing -Y, real size | anymove-rig |
-| 2. skeleton | creature | joints placed in `assets/<c>/rig.json`, rig built and skinned in Blender | anymove-rig |
+| 1. mesh | creature | a textured 3D model (Rodin Gen-2.5 from one image, or your own GLB), facing -Y, real size | anymove-rig |
+| 2. skeleton | creature | joints placed by hand or Rodin, rig skinned and imported into Blender | anymove-rig |
 | 3. limb colours | creature | each limb painted its own colour so left and right never swap | anymove-rig |
 | 4. two cameras | move | the painted reference frame plus a strict prompt go to MiniMax H3 Max on fal | anymove-film |
 | 5. teach a reader | creature | 2,200 random poses rendered with known joints; DINOv2 learns this creature | anymove-reader |
@@ -34,6 +34,8 @@ height, and together they pin the joint in 3D. The method is @CanItCode's; the L
    `.venv/bin/pip install torch==2.11.0 --index-url https://download.pytorch.org/whl/cu128` and
    `.venv/bin/pip install -r requirements.txt`. Blender 5.x must be on PATH, or set `BLENDER=/path/to/blender`.
 3. For video generation and LoRA training, put `FAL_KEY=...` in `.env` (git ignores it) or export it. Never print it.
+   New meshes use Rodin with the public `vibecoding` evaluation key, or your `RODIN_API_KEY` from `.env`/the
+   environment; failed generations fall back to Tripo on fal with `FAL_KEY` (anymove-rig).
 4. Every command takes a creature name; its config is `assets/<c>/creature.json` and every output lands in
    `runs/<c>/` (reference frame, dataset, `reader.pt`, videos, clips). The scripts set `MOCAP_CREATURE` for you; when
    you run a `python -m mocap...` module by hand, set `MOCAP_CREATURE=assets/<c>` first, or the wolf's layout applies.
@@ -63,7 +65,8 @@ It prints the paw agreement (about 0.93) and the reprojection error per view; `m
 
 ## Costs and time (October 2026, one RTX 4090)
 
-- Tripo H3.1 mesh with HD texture: $0.40. MiniMax H3 Max clip: about $0.26 for 5 s (H3: $0.30).
+- Rodin mesh: public evaluation key (usage limits); own-key costs at https://hyper3d.ai/features/api. Tripo fallback:
+  $0.40 with HD texture. MiniMax H3 Max clip: about $0.26 for 5 s (H3: $0.30).
 - Dataset of 2,200 poses: about 25 min. Reader training: 17-20 min. Reading a clip: 10 s. Fitting: under a minute.
 - A LoRA: $0.01 a training step, so 1,200 steps cost about $12 and take about 2 h on fal.
 
