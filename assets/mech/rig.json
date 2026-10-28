@@ -1,0 +1,288 @@
+{
+ "note": "Two-legged mech (overnight), metres, faces -Y, its left is +X; symmetric. Reverse-jointed legs: hip, knee (forward), hock (back), foot with a forward toe and a rear spur.",
+ "joints": {
+  "hips": [
+   0,
+   0.0,
+   2.6
+  ],
+  "chest": [
+   0,
+   0.0,
+   3.0
+  ],
+  "top": [
+   0,
+   -0.1,
+   3.95
+  ],
+  "shoulder_L": [
+   0.75,
+   0.1,
+   3.12
+  ],
+  "elbow_L": [
+   1.1,
+   0.15,
+   2.97
+  ],
+  "wrist_L": [
+   1.36,
+   0.05,
+   2.58
+  ],
+  "handtip_L": [
+   1.47,
+   -0.05,
+   2.3
+  ],
+  "hip_L": [
+   0.55,
+   0.0,
+   2.55
+  ],
+  "knee_L": [
+   0.68,
+   -0.4,
+   1.85
+  ],
+  "hock_L": [
+   0.72,
+   0.45,
+   1.12
+  ],
+  "ball_L": [
+   0.88,
+   0.02,
+   0.35
+  ],
+  "toetip_L": [
+   1.0,
+   -0.68,
+   0.05
+  ],
+  "spurtip_L": [
+   0.9,
+   0.75,
+   0.06
+  ]
+ },
+ "bones": [
+  [
+   "pelvis",
+   "hips",
+   "chest",
+   null
+  ],
+  [
+   "chest",
+   "chest",
+   "top",
+   "pelvis"
+  ],
+  [
+   "upperarm_L",
+   "shoulder_L",
+   "elbow_L",
+   "chest"
+  ],
+  [
+   "forearm_L",
+   "elbow_L",
+   "wrist_L",
+   "upperarm_L"
+  ],
+  [
+   "hand_L",
+   "wrist_L",
+   "handtip_L",
+   "forearm_L"
+  ],
+  [
+   "thigh_L",
+   "hip_L",
+   "knee_L",
+   "pelvis"
+  ],
+  [
+   "shin_L",
+   "knee_L",
+   "hock_L",
+   "thigh_L"
+  ],
+  [
+   "metatarsus_L",
+   "hock_L",
+   "ball_L",
+   "shin_L"
+  ],
+  [
+   "toe_L",
+   "ball_L",
+   "toetip_L",
+   "metatarsus_L"
+  ],
+  [
+   "spur_L",
+   "ball_L",
+   "spurtip_L",
+   "metatarsus_L"
+  ]
+ ],
+ "limits_deg": {
+  "pelvis": [
+   [
+    -25,
+    25
+   ],
+   [
+    -15,
+    15
+   ],
+   [
+    -25,
+    25
+   ]
+  ],
+  "chest": [
+   [
+    -20,
+    20
+   ],
+   [
+    -25,
+    25
+   ],
+   [
+    -12,
+    12
+   ]
+  ],
+  "forearm": [
+   [
+    -110,
+    10
+   ],
+   [
+    -30,
+    30
+   ],
+   [
+    -15,
+    15
+   ]
+  ],
+  "hand": [
+   [
+    -50,
+    50
+   ],
+   [
+    -30,
+    30
+   ],
+   [
+    -30,
+    30
+   ]
+  ],
+  "thigh": [
+   [
+    -70,
+    50
+   ],
+   [
+    -10,
+    10
+   ],
+   [
+    -20,
+    20
+   ]
+  ],
+  "shin": [
+   [
+    -35,
+    75
+   ],
+   [
+    -8,
+    8
+   ],
+   [
+    -10,
+    10
+   ]
+  ],
+  "metatarsus": [
+   [
+    -75,
+    40
+   ],
+   [
+    -8,
+    8
+   ],
+   [
+    -10,
+    10
+   ]
+  ],
+  "toe": [
+   [
+    -45,
+    45
+   ],
+   [
+    -5,
+    5
+   ],
+   [
+    -8,
+    8
+   ]
+  ],
+  "spur": [
+   [
+    -30,
+    30
+   ],
+   [
+    -5,
+    5
+   ],
+   [
+    -8,
+    8
+   ]
+  ],
+  "upperarm_L": [
+   [
+    -90,
+    60
+   ],
+   [
+    -30,
+    30
+   ],
+   [
+    -50,
+    60
+   ]
+  ],
+  "upperarm_R": [
+   [
+    -90,
+    60
+   ],
+   [
+    -30,
+    30
+   ],
+   [
+    -60,
+    50
+   ]
+  ]
+ }
+}

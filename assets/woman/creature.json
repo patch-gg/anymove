@@ -1,0 +1,140 @@
+{
+ "name": "woman",
+ "prep": {
+  "length_m": 1.7,
+  "rotz_deg": -90,
+  "axis": "z"
+ },
+ "paint": {
+  "AL": {
+   "color": "#F53CD1",
+   "bones": [
+    "upperarm_L",
+    "forearm_L",
+    "hand_L"
+   ]
+  },
+  "AR": {
+   "color": "#2F6BFF",
+   "bones": [
+    "upperarm_R",
+    "forearm_R",
+    "hand_R"
+   ]
+  },
+  "LL": {
+   "color": "#FFD21F",
+   "bones": [
+    "thigh_L",
+    "shin_L",
+    "foot_L",
+    "toe_L"
+   ]
+  },
+  "LR": {
+   "color": "#19D3E0",
+   "bones": [
+    "thigh_R",
+    "shin_R",
+    "foot_R",
+    "toe_R"
+   ]
+  }
+ },
+ "feet": [
+  "ankle_L",
+  "ankle_R",
+  "wrist_L",
+  "wrist_R"
+ ],
+ "contacts": [
+  "ankle_L",
+  "ankle_R",
+  "ball_L",
+  "ball_R",
+  "toetip_L",
+  "toetip_R"
+ ],
+ "testpose": {
+  "upperarm_L": [
+   -70,
+   0,
+   0
+  ],
+  "forearm_L": [
+   -100,
+   0,
+   0
+  ],
+  "thigh_R": [
+   -80,
+   0,
+   0
+  ],
+  "shin_R": [
+   100,
+   0,
+   0
+  ],
+  "foot_R": [
+   -25,
+   0,
+   0
+  ],
+  "upperarm_R": [
+   0,
+   0,
+   -30
+  ],
+  "spine2": [
+   15,
+   0,
+   10
+  ],
+  "head": [
+   0,
+   25,
+   0
+  ],
+  "thigh_L": [
+   25,
+   0,
+   0
+  ]
+ },
+ "flank": "side",
+ "limbs": "limbs",
+ "noun": "athletic woman",
+ "layout": {
+  "W_FRONT": 640,
+  "W_SIDE": 640,
+  "M_PER_PX": 0.0037,
+  "GROUND_V": 640
+ },
+ "describe": "an athletic young woman in a plain black sports top, fitted black leggings and white running shoes, her hair in a tight bun",
+ "colour_code": "left arm pink, right arm blue, left leg yellow, right leg cyan",
+ "count": "Exactly two arms, two legs, one head. No props, no other people.",
+ "start_pose": {
+  "upperarm_L": [
+   0,
+   0,
+   30
+  ],
+  "upperarm_R": [
+   0,
+   0,
+   -30
+  ],
+  "forearm_L": [
+   -12,
+   0,
+   0
+  ],
+  "forearm_R": [
+   -12,
+   0,
+   0
+  ]
+ },
+ "fix_front_swaps": true
+}
