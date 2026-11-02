@@ -9,7 +9,7 @@
     {
       "name": "anymove",
       "source": "./",
-      "description": "Skills to rig a creature, film it with two cameras in one AI clip, train its joint reader, capture the move as a GLB, and train the MiniMax H3 LoRA.",
+      "description": "Skills to rig a creature, film it with two cameras in one AI clip, train its joint reader, capture the move as a GLB, build a game-ready pack, and train the MiniMax H3 LoRA.",
       "category": "gamedev",
       "tags": ["animation", "motion-capture", "creature", "blender"]
     }

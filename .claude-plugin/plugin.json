@@ -2,7 +2,7 @@
   "name": "anymove",
   "displayName": "anymove",
   "version": "0.1.0",
-  "description": "Motion capture for any creature from one AI video: two cameras in one frame, a DINOv2 joint reader trained on the creature, the rig fitted in both views, a GLB out. Skills for rigging, filming, training, capturing and the H3 LoRA.",
+  "description": "Motion capture for any creature from one AI video: two cameras in one frame, a DINOv2 joint reader trained on the creature, the rig fitted in both views, a GLB out. Skills for rigging, filming, training, capturing, packing and the H3 LoRA.",
   "author": {
     "name": "Patch",
     "url": "https://patch.gg"

@@ -29,7 +29,8 @@ under `prompts/` still matches its creature.json.
 
 ## 2. Generate
 
-Say the cost first: about $0.26 per 5 s clip with H3 Max (October 2026), one clip per model and seed.
+Say the cost first: about $0.26 per 5 s clip with H3 Max (October 2026), one clip per model and seed, and about 7 clips
+($1.80) for a usable move on average. Two seeds is a start, not a budget: 58% of captured clips passed the checks.
 
 ```bash
 tools/film.sh <c> roar h3max 1,2      # runs/<c>/videos/roar/s1/h3max.mp4 and s2/; about 1-2 min each

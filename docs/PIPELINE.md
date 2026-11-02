@@ -24,7 +24,7 @@ it, every module falls back to the wolf's layout (420 + 860 px, 1.9 m of height 
 | file | written by | holds |
 |---|---|---|
 | `assets/<c>/model.glb` | Tripo or any generator | the textured mesh |
-| `assets/<c>/creature.json` | you | `prep` (length_m, rotz_deg, axis), `layout`, `paint` (limb groups: colour + bones), `feet`, prompt words (`name`, `noun`, `describe`, `colour_code`, `count`, `flank`, `limbs`), the 3/4 showcase `camera` |
+| `assets/<c>/creature.json` | you | `prep` (length_m, rotz_deg, axis), `layout`, `paint` (limb groups: colour + bones), `feet`, prompt words (`name`, `noun`, `describe`, `colour_code`, `count`, `flank`, `limbs`), the 3/4 showcase `camera`; optional: `contacts` (ground contact joints), `testpose`, `start_pose` (film A-pose bipeds with arms down), `rigid` (hard single-bone skinning), `fix_front_swaps` |
 | `assets/<c>/rig.json` | you | `joints` (metres, -Y forward, +X left), `bones` [name, head, tail, parent], `limits_deg` per bone or stem |
 | `assets/<c>/prep/static.blend` | `blender/prep_mesh.py` | the mesh at real size, facing -Y, on the ground |
 | `assets/<c>/rigged/rigged.blend` | `blender/build_rig.py` | armature, skinned mesh, limb paint as a colour attribute (`legpaint`) |
@@ -43,6 +43,10 @@ it, every module falls back to the wolf's layout (420 + 860 px, 1.9 m of height 
 | fit | `mocap/solve.py` | det.npz + rig_info.json | `motion.json`: `bones`, `trans`, `root_quat`, `euler` (T x B x 3), `joints` (T x J x 3 m), `reproj_px`, `sync` (incl. `paw_agreement`) |
 | apply | `blender/apply_motion.py` | rigged.blend + motion.json | keyframed rig, `joints.json` (true joint positions from Blender), renders, `animation.glb` |
 | compare | `mocap/showcase.py` | clip + det.npz + renders | `showcase.mp4` |
+| score | `tools/score_takes.py` | every take's motion.json + det.npz | `runs/<c>/takes.csv` |
+| shape | `tools/shape_pack.py`, `tools/shape_clip.py` | `picks/<c>.json` + motion.json | `runs/<c>/pack/clips/<Name>.json` (trimmed, looped, root motion), `shape_report.json` |
+| pack | `blender/pack_glb.py` | rigged.blend + shaped clips | `runs/<c>/pack/<c>.glb`, the limb paint taken out |
+| feet | `tools/locomotion.py` | root-motion loops | `runs/<c>/pack/locomotion.json` |
 | exam | `mocap/exam.py` | rig_info.json | a random motion, its two-camera video, and a per-joint error score in cm |
 | LoRA | `tools/build_lora_set.py`, `mocap/mirror.py`, `mocap/lora.py` | captured motions + prompts | training clips, the fal run, `lora.json` |
 
@@ -63,11 +67,14 @@ that cuts the height gap by 15% or more. Joints are triangulated (x from the fro
 0.25 front / 1 side by confidence), the root rotation comes from a weighted Kabsch fit of the points riding on the
 root bone, and an analytic IK pose aimed at the triangulated joints is the starting point. The loss is a robust
 (Cauchy) reprojection error in both views, its scale annealed from 40 px to 6 px over the first 60% of 1,500 Adam
-steps, plus joint acceleration, angular velocity, a small pull to rest, and a ground term for paws.
+steps, plus joint acceleration, angular velocity, a small pull to rest, and a ground term. A first fit finds where each
+contact joint is planted and the ground's own velocity (on an on-the-spot clip, planted feet ride backwards together);
+a second holds each plant still relative to the ground, and writes `contacts` into motion.json.
 
 ## Known gaps in the code
 
-- The ground term and `fix_swaps` know the wolf's and dragon's limb names (`fpaw`, `ftoe`, `hpaw`, `htoe`; `LEGS` in
-  `solve.py`). Other creatures fit without a ground penalty, and `--fix-swaps` does nothing for them.
+- Nothing pins planted feet after the fit, so they slide 1 to 2 cm a step. A short IK pass would remove it.
+- Mirrored `_L`/`_R` bones share one local Z axis, so a shared sideways limit is wrong for one side (anymove-rig).
+- The wing skeleton doesn't follow how a video folds and sweeps a feathered wing (the eagle: 15-30 px off).
 - `mocap/exam.py`'s per-group scores use the wolf's joint names; the mean, median and p95 work for any creature.
 - `tools/build_lora_set.py` mirrors motions assuming a symmetric rig.
