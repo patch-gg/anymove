@@ -1,0 +1,49 @@
+{
+ "Idle": {
+  "take": "idle_s2",
+  "loop": true,
+  "skip": 24,
+  "cycle": [
+   48,
+   96
+  ]
+ },
+ "Walk": {
+  "take": "walk_s3",
+  "loop": true,
+  "locomotion": true,
+  "cycle": [
+   24,
+   96
+  ]
+ },
+ "Run": {
+  "take": "gallop_s8_h3",
+  "loop": true,
+  "locomotion": true,
+  "cycle": [
+   12,
+   72
+  ],
+  "flagged": true
+ },
+ "Trot": {
+  "take": "trot_s3",
+  "loop": true,
+  "locomotion": true,
+  "cycle": [
+   16,
+   80
+  ]
+ },
+ "Attack": {
+  "take": "attack_s3"
+ },
+ "Hit": {
+  "take": "hit_s2",
+  "flagged": true
+ },
+ "Jump": {
+  "take": "jump_s3"
+ }
+}

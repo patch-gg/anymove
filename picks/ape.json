@@ -1,0 +1,41 @@
+{
+ "Idle": {
+  "take": "idle_s3",
+  "loop": true,
+  "skip": 24,
+  "cycle": [
+   48,
+   96
+  ]
+ },
+ "Walk": {
+  "take": "walk_s1",
+  "loop": true,
+  "skip": 12,
+  "cycle": [
+   20,
+   96
+  ],
+  "locomotion": true
+ },
+ "Run": {
+  "take": "run_s2",
+  "loop": true,
+  "skip": 12,
+  "cycle": [
+   12,
+   72
+  ],
+  "locomotion": true,
+  "flagged": true
+ },
+ "Hit": {
+  "take": "hit_s2"
+ },
+ "Jump": {
+  "take": "jump_s2"
+ },
+ "ChestBeat": {
+  "take": "chestbeat_s1"
+ }
+}
