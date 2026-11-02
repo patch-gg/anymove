@@ -1,0 +1,513 @@
+{
+ "ape": {
+  "concept_model": "blackforestlabs/flux-3/text-to-image",
+  "concept_prompt": "A giant photorealistic silverback gorilla-like ape 3D game creature with short dark grey-black fur and a silver back, massively muscular, standing on all fours in a knuckle-walking stance: both long arms straight down to its knuckles and clearly apart from the body, both legs apart, head slightly forward, mouth closed. Full body, three-quarter view from the front left. The whole body is in frame with space around it. Plain flat light grey studio background, soft even lighting, no ground shadow, no props, no text.",
+  "mesh_model": "tripo3d/h3.1/image-to-3d",
+  "clips": {
+   "Idle": {
+    "take": "idle_s3",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 3,
+    "file": "ape.glb",
+    "prompt": "Animate the exact giant ape game model shown twice in this split-screen image. Left: a front camera, the ape faces the viewer. Right: a side camera on its right side, the ape faces right. Both are locked-off cameras filming the same ape at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a giant silverback gorilla-like ape with short dark grey-black fur and a silver back, massively muscular, standing on its knuckles. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one head. No other animals, no props. Action: the ape stands on its knuckles in place breathing heavily, it looks around and shifts its weight, its hands and feet stay planted. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Walk": {
+    "take": "walk_s1",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 1,
+    "file": "ape.glb",
+    "prompt": "Animate the exact giant ape game model shown twice in this split-screen image. Left: a front camera, the ape faces the viewer. Right: a side camera on its right side, the ape faces right. Both are locked-off cameras filming the same ape at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a giant silverback gorilla-like ape with short dark grey-black fur and a silver back, massively muscular, standing on its knuckles. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one head. No other animals, no props. Action: the ape knuckle-walks on the spot like a video-game walking loop, its pink left arm, blue right arm, yellow left leg and cyan right leg stepping in turn on knuckles and feet. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Run": {
+    "take": "run_s2",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 2,
+    "file": "ape_flagged.glb",
+    "prompt": "Animate the exact giant ape game model shown twice in this split-screen image. Left: a front camera, the ape faces the viewer. Right: a side camera on its right side, the ape faces right. Both are locked-off cameras filming the same ape at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a giant silverback gorilla-like ape with short dark grey-black fur and a silver back, massively muscular, standing on its knuckles. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one head. No other animals, no props. Action: the ape gallops on its knuckles on the spot like a video-game running loop, its arms and legs bounding powerfully, its back rising and falling. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Hit": {
+    "take": "hit_s2",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 2,
+    "file": "ape.glb",
+    "prompt": "Animate the exact giant ape game model shown twice in this split-screen image. Left: a front camera, the ape faces the viewer. Right: a side camera on its right side, the ape faces right. Both are locked-off cameras filming the same ape at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a giant silverback gorilla-like ape with short dark grey-black fur and a silver back, massively muscular, standing on its knuckles. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one head. No other animals, no props. Action: the ape is struck hard on its left side, it flinches and recoils to its right, then recovers onto its knuckles and stands still again. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Jump": {
+    "take": "jump_s2",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 2,
+    "file": "ape.glb",
+    "prompt": "Animate the exact giant ape game model shown twice in this split-screen image. Left: a front camera, the ape faces the viewer. Right: a side camera on its right side, the ape faces right. Both are locked-off cameras filming the same ape at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a giant silverback gorilla-like ape with short dark grey-black fur and a silver back, massively muscular, standing on its knuckles. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one head. No other animals, no props. Action: the ape crouches and leaps straight up off its hands and feet so all four leave the ground, then lands back on its knuckles and feet and stands still again. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "ChestBeat": {
+    "take": "chestbeat_s1",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 1,
+    "file": "ape.glb",
+    "prompt": "Animate the exact giant ape game model shown twice in this split-screen image. Left: a front camera, the ape faces the viewer. Right: a side camera on its right side, the ape faces right. Both are locked-off cameras filming the same ape at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a giant silverback gorilla-like ape with short dark grey-black fur and a silver back, massively muscular, standing on its knuckles. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one head. No other animals, no props. Action: the ape rises up onto its two hind legs, beats its chest rapidly with both fists, then drops back down onto its knuckles. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   }
+  }
+ },
+ "centaur": {
+  "concept_model": "blackforestlabs/flux-3/text-to-image",
+  "concept_prompt": "A realistic centaur 3D game character: the lower body is a muscular chestnut horse standing square on four legs that are clearly apart, the upper body is a muscular bare-chested man with short cropped hair and a short beard. His arms are held out about forty degrees away from his body in an A-pose with open hands. Short horse tail. No weapon, no bow, no armour, no cape, no jewellery. Full body, three-quarter view from the front left. The whole body is in frame with space around it. Plain flat light grey studio background, soft even lighting, no ground shadow, no props, no text.",
+  "mesh_model": "tripo3d/h3.1/image-to-3d",
+  "clips": {
+   "Idle": {
+    "take": "idle_s1",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 1,
+    "file": "centaur.glb",
+    "prompt": "Animate the exact centaur game model shown twice in this split-screen image. Left: a front camera, the centaur faces the viewer. Right: a side camera on its right flank, the centaur faces right. Both are locked-off cameras filming the same centaur at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a centaur: a muscular chestnut horse body with four legs and a short tail, joined at the withers to the bare-chested upper body of a bearded man with short dark hair. Its limbs are colour-coded and the colours never change or swap: front-left horse leg pink, front-right horse leg blue, hind-left horse leg yellow, hind-right horse leg cyan, left human arm orange, right human arm green. Exactly four horse legs, two human arms, one human head, one tail. No weapon, no bow, no armour, no rider. Action: the centaur stands in place breathing calmly, its human arms lowered relaxed at its sides, it looks around and shifts its weight, its four hooves stay planted. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Walk": {
+    "take": "walk_s4",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 4,
+    "file": "centaur.glb",
+    "prompt": "Animate the exact centaur game model shown twice in this split-screen image. Left: a front camera, the centaur faces the viewer. Right: a side camera on its right flank, the centaur faces right. Both are locked-off cameras filming the same centaur at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a centaur: a muscular chestnut horse body with four legs and a short tail, joined at the withers to the bare-chested upper body of a bearded man with short dark hair. Its limbs are colour-coded and the colours never change or swap: front-left horse leg pink, front-right horse leg blue, hind-left horse leg yellow, hind-right horse leg cyan, left human arm orange, right human arm green. Exactly four horse legs, two human arms, one human head, one tail. No weapon, no bow, no armour, no rider. Action: the centaur walks on the spot like a video-game walking loop, a calm four-beat walk with each horse leg lifting and planting in turn, its human arms hanging and swinging gently at its sides. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Run": {
+    "take": "run_s4",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 4,
+    "file": "centaur.glb",
+    "prompt": "Animate the exact centaur game model shown twice in this split-screen image. Left: a front camera, the centaur faces the viewer. Right: a side camera on its right flank, the centaur faces right. Both are locked-off cameras filming the same centaur at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a centaur: a muscular chestnut horse body with four legs and a short tail, joined at the withers to the bare-chested upper body of a bearded man with short dark hair. Its limbs are colour-coded and the colours never change or swap: front-left horse leg pink, front-right horse leg blue, hind-left horse leg yellow, hind-right horse leg cyan, left human arm orange, right human arm green. Exactly four horse legs, two human arms, one human head, one tail. No weapon, no bow, no armour, no rider. Action: the centaur canters on the spot like a video-game running loop, a steady rhythmic canter with its horse legs reaching forward and back, its human torso upright, staying the same size and in the same place in both views. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Attack": {
+    "take": "attack_s1",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 1,
+    "file": "centaur.glb",
+    "prompt": "Animate the exact centaur game model shown twice in this split-screen image. Left: a front camera, the centaur faces the viewer. Right: a side camera on its right flank, the centaur faces right. Both are locked-off cameras filming the same centaur at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a centaur: a muscular chestnut horse body with four legs and a short tail, joined at the withers to the bare-chested upper body of a bearded man with short dark hair. Its limbs are colour-coded and the colours never change or swap: front-left horse leg pink, front-right horse leg blue, hind-left horse leg yellow, hind-right horse leg cyan, left human arm orange, right human arm green. Exactly four horse legs, two human arms, one human head, one tail. No weapon, no bow, no armour, no rider. Action: the centaur raises both fists into a guard and throws a hard straight punch with its green right human arm, then returns to its guard with its horse legs planted. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Hit": {
+    "take": "hit_s2",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 2,
+    "file": "centaur.glb",
+    "prompt": "Animate the exact centaur game model shown twice in this split-screen image. Left: a front camera, the centaur faces the viewer. Right: a side camera on its right flank, the centaur faces right. Both are locked-off cameras filming the same centaur at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a centaur: a muscular chestnut horse body with four legs and a short tail, joined at the withers to the bare-chested upper body of a bearded man with short dark hair. Its limbs are colour-coded and the colours never change or swap: front-left horse leg pink, front-right horse leg blue, hind-left horse leg yellow, hind-right horse leg cyan, left human arm orange, right human arm green. Exactly four horse legs, two human arms, one human head, one tail. No weapon, no bow, no armour, no rider. Action: the centaur is struck hard in the chest, its human torso snaps back and its horse body staggers half a step, then it recovers and stands still again. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Jump": {
+    "take": "jump_s1",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 1,
+    "file": "centaur.glb",
+    "prompt": "Animate the exact centaur game model shown twice in this split-screen image. Left: a front camera, the centaur faces the viewer. Right: a side camera on its right flank, the centaur faces right. Both are locked-off cameras filming the same centaur at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a centaur: a muscular chestnut horse body with four legs and a short tail, joined at the withers to the bare-chested upper body of a bearded man with short dark hair. Its limbs are colour-coded and the colours never change or swap: front-left horse leg pink, front-right horse leg blue, hind-left horse leg yellow, hind-right horse leg cyan, left human arm orange, right human arm green. Exactly four horse legs, two human arms, one human head, one tail. No weapon, no bow, no armour, no rider. Action: the centaur lowers its arms and jumps straight up with all four horse legs leaving the ground, front legs tucked, then lands on all four legs and stands still again. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Rear": {
+    "take": "rear_s1",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 1,
+    "file": "centaur.glb",
+    "prompt": "Animate the exact centaur game model shown twice in this split-screen image. Left: a front camera, the centaur faces the viewer. Right: a side camera on its right flank, the centaur faces right. Both are locked-off cameras filming the same centaur at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a centaur: a muscular chestnut horse body with four legs and a short tail, joined at the withers to the bare-chested upper body of a bearded man with short dark hair. Its limbs are colour-coded and the colours never change or swap: front-left horse leg pink, front-right horse leg blue, hind-left horse leg yellow, hind-right horse leg cyan, left human arm orange, right human arm green. Exactly four horse legs, two human arms, one human head, one tail. No weapon, no bow, no armour, no rider. Action: the centaur rears up onto its hind horse legs, front horse legs kicking in the air and its human arms raised high, then drops back down onto all four legs. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   }
+  }
+ },
+ "eagle": {
+  "concept_model": "blackforestlabs/flux-3/text-to-image",
+  "concept_prompt": "A photorealistic golden eagle 3D game creature standing on the ground with both wings fully spread out wide to the sides and slightly raised, primary feathers fanned, tail feathers fanned, its two legs and yellow talons visible and apart, head forward with a hooked yellow beak. Full body, three-quarter view from the front left. The whole body is in frame with space around it. Plain flat light grey studio background, soft even lighting, no ground shadow, no props, no text.",
+  "mesh_model": "tripo3d/h3.1/image-to-3d",
+  "clips": {
+   "Idle": {
+    "take": "idle_s1",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 1,
+    "file": "eagle.glb",
+    "prompt": "Animate the exact golden eagle game model shown twice in this split-screen image. Left: a front camera, the eagle faces the viewer. Right: a side camera on its right side, the eagle faces right. Both are locked-off cameras filming the same eagle at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a golden eagle with dark brown feathers, a golden-brown head, a hooked yellow beak and yellow feet with black talons. Its limbs are colour-coded and the colours never change or swap: left wing pink, right wing blue, left leg yellow, right leg cyan. Exactly two wings, two legs, one tail, one head. No other birds, no prey, no feathers flying off. Action: the eagle stands in place with its wings slowly folding halfway and opening again, it turns its head to look left and right, its feet stay planted. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Walk": {
+    "take": "walk_s3",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 3,
+    "file": "eagle_flagged.glb",
+    "prompt": "Animate the exact golden eagle game model shown twice in this split-screen image. Left: a front camera, the eagle faces the viewer. Right: a side camera on its right side, the eagle faces right. Both are locked-off cameras filming the same eagle at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a golden eagle with dark brown feathers, a golden-brown head, a hooked yellow beak and yellow feet with black talons. Its limbs are colour-coded and the colours never change or swap: left wing pink, right wing blue, left leg yellow, right leg cyan. Exactly two wings, two legs, one tail, one head. No other birds, no prey, no feathers flying off. Action: the eagle walks on the spot like a video-game walking loop, its yellow left leg and cyan right leg stepping in turn, its wings held half open for balance, its head bobbing. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   }
+  }
+ },
+ "horse": {
+  "concept_model": "openai/gpt-image-2.5/flare/text-to-image",
+  "concept_prompt": "A photorealistic horse 3D game character: a muscular bay horse with a glossy dark brown coat, black lower legs and black hooves, a short neatly roached mane and a short tail, no saddle, no bridle, no halter. Full body, three-quarter view from the front left, standing square in a neutral pose on all four legs with the legs clearly apart, head up, neck relaxed. The whole body is in frame with space around it. Plain flat light grey studio background, soft even lighting, no ground shadow, no props, no text.",
+  "mesh_model": "tripo3d/h3.1/image-to-3d",
+  "clips": {
+   "Idle": {
+    "take": "idle_s2",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 2,
+    "file": "horse.glb",
+    "prompt": "Animate the exact horse game model shown twice in this split-screen image. Left: a front camera, the horse faces the viewer. Right: a side camera on its right flank, the horse faces right. Both are locked-off cameras filming the same horse at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a muscular bay horse with a glossy dark brown coat, black lower legs and hooves, a short roached mane and a short tail. Its legs are colour-coded and the colours never change or swap: front-left leg pink, front-right leg blue, hind-left leg yellow, hind-right leg cyan. Exactly four legs, one tail, one head. No saddle, no bridle, no rider, no dust. Action: the horse stands in place breathing calmly, it shifts its weight, swishes its tail and turns its head to look around, its four hooves stay planted. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Walk": {
+    "take": "walk_s3",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 3,
+    "file": "horse.glb",
+    "prompt": "Animate the exact horse game model shown twice in this split-screen image. Left: a front camera, the horse faces the viewer. Right: a side camera on its right flank, the horse faces right. Both are locked-off cameras filming the same horse at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a muscular bay horse with a glossy dark brown coat, black lower legs and hooves, a short roached mane and a short tail. Its legs are colour-coded and the colours never change or swap: front-left leg pink, front-right leg blue, hind-left leg yellow, hind-right leg cyan. Exactly four legs, one tail, one head. No saddle, no bridle, no rider, no dust. Action: the horse walks on the spot like a video-game walking loop, a calm four-beat walk with each leg lifting and planting in turn, its head nodding gently with each step. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Run": {
+    "take": "gallop_s8_h3",
+    "video_model": "minimax/h3/image-to-video",
+    "seed": 8,
+    "file": "horse_flagged.glb",
+    "prompt": "Animate the exact horse game model shown twice in this split-screen image. Left: a front camera, the horse faces the viewer. Right: a side camera on its right flank, the horse faces right. Both are locked-off cameras filming the same horse at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a muscular bay horse with a glossy dark brown coat, black lower legs and hooves, a short roached mane and a short tail. Its legs are colour-coded and the colours never change or swap: front-left leg pink, front-right leg blue, hind-left leg yellow, hind-right leg cyan. Exactly four legs, one tail, one head. No saddle, no bridle, no rider, no dust. Action: the horse gallops on the spot like a video-game galloping loop, a steady rhythmic gallop with its legs reaching forward and back, its body staying the same size and in the same place in both views, each leg keeping its own colour through every stride. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Trot": {
+    "take": "trot_s3",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 3,
+    "file": "horse.glb",
+    "prompt": "Animate the exact horse game model shown twice in this split-screen image. Left: a front camera, the horse faces the viewer. Right: a side camera on its right flank, the horse faces right. Both are locked-off cameras filming the same horse at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a muscular bay horse with a glossy dark brown coat, black lower legs and hooves, a short roached mane and a short tail. Its legs are colour-coded and the colours never change or swap: front-left leg pink, front-right leg blue, hind-left leg yellow, hind-right leg cyan. Exactly four legs, one tail, one head. No saddle, no bridle, no rider, no dust. Action: the horse trots on the spot like a video-game trotting loop, a springy two-beat trot with diagonal pairs of legs moving together, the pink front-left leg with the cyan hind-right leg, then the blue front-right leg with the yellow hind-left leg. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Attack": {
+    "take": "attack_s3",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 3,
+    "file": "horse.glb",
+    "prompt": "Animate the exact horse game model shown twice in this split-screen image. Left: a front camera, the horse faces the viewer. Right: a side camera on its right flank, the horse faces right. Both are locked-off cameras filming the same horse at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a muscular bay horse with a glossy dark brown coat, black lower legs and hooves, a short roached mane and a short tail. Its legs are colour-coded and the colours never change or swap: front-left leg pink, front-right leg blue, hind-left leg yellow, hind-right leg cyan. Exactly four legs, one tail, one head. No saddle, no bridle, no rider, no dust. Action: the horse lowers its head and bucks, kicking both hind legs high out behind it, then lands its hind legs and stands still again. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Hit": {
+    "take": "hit_s2",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 2,
+    "file": "horse_flagged.glb",
+    "prompt": "Animate the exact horse game model shown twice in this split-screen image. Left: a front camera, the horse faces the viewer. Right: a side camera on its right flank, the horse faces right. Both are locked-off cameras filming the same horse at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a muscular bay horse with a glossy dark brown coat, black lower legs and hooves, a short roached mane and a short tail. Its legs are colour-coded and the colours never change or swap: front-left leg pink, front-right leg blue, hind-left leg yellow, hind-right leg cyan. Exactly four legs, one tail, one head. No saddle, no bridle, no rider, no dust. Action: the horse is struck hard on its left side, it flinches and shies sideways a half step, throwing its head up, then settles and stands still again. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Jump": {
+    "take": "jump_s3",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 3,
+    "file": "horse.glb",
+    "prompt": "Animate the exact horse game model shown twice in this split-screen image. Left: a front camera, the horse faces the viewer. Right: a side camera on its right flank, the horse faces right. Both are locked-off cameras filming the same horse at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a muscular bay horse with a glossy dark brown coat, black lower legs and hooves, a short roached mane and a short tail. Its legs are colour-coded and the colours never change or swap: front-left leg pink, front-right leg blue, hind-left leg yellow, hind-right leg cyan. Exactly four legs, one tail, one head. No saddle, no bridle, no rider, no dust. Action: the horse gathers itself and jumps straight up as if clearing a fence, front legs tucked under its chest and hind legs pushing off, then lands on all four legs and stands still again. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   }
+  }
+ },
+ "knight": {
+  "concept_model": "blackforestlabs/flux-3/text-to-image",
+  "concept_prompt": "A realistic medieval knight 3D game character in full polished steel plate armour, full body, seen in a three-quarter view from the front left. He stands in an A-pose: arms straight and held out about forty degrees away from the body, open gauntleted hands, legs straight and slightly apart, feet flat. Closed visored helmet with no plume, articulated pauldrons, couters, poleyns and sabatons, a short mail skirt. No cape, no cloak, no tabard, no weapon, no shield, no belt items. The whole body from helmet to feet is in frame with space around it. Plain flat light grey studio background, soft even lighting, no ground shadow, no props, no text.",
+  "mesh_model": "tripo3d/h3.1/image-to-3d",
+  "clips": {
+   "Idle": {
+    "take": "idle_s1",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 1,
+    "file": "knight.glb",
+    "prompt": "Animate the exact armoured knight game model shown twice in this split-screen image. Left: a front camera, the knight faces the viewer. Right: a side camera on its right side, the knight faces right. Both are locked-off cameras filming the same knight at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a knight in full polished steel plate armour with a closed visored helmet, no weapon and no shield. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one head. No weapon, no shield, no cape, no other people. Action: the knight stands calmly in place with both arms hanging straight and relaxed at his sides, breathing and shifting his weight gently from one leg to the other, both feet planted. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Walk": {
+    "take": "walk_s3",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 3,
+    "file": "knight.glb",
+    "prompt": "Animate the exact armoured knight game model shown twice in this split-screen image. Left: a front camera, the knight faces the viewer. Right: a side camera on its right side, the knight faces right. Both are locked-off cameras filming the same knight at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a knight in full polished steel plate armour with a closed visored helmet, no weapon and no shield. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one head. No weapon, no shield, no cape, no other people. Action: the knight lowers his arms and walks on the spot like a video-game walking loop, his yellow left leg and cyan right leg stepping in turn, his arms swinging naturally opposite to his legs. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Run": {
+    "take": "run_s2",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 2,
+    "file": "knight.glb",
+    "prompt": "Animate the exact armoured knight game model shown twice in this split-screen image. Left: a front camera, the knight faces the viewer. Right: a side camera on its right side, the knight faces right. Both are locked-off cameras filming the same knight at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a knight in full polished steel plate armour with a closed visored helmet, no weapon and no shield. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one head. No weapon, no shield, no cape, no other people. Action: the knight lowers his arms and runs on the spot like a video-game running loop, knees lifting high, his yellow left leg and cyan right leg pounding in turn, his arms bent and pumping. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Attack": {
+    "take": "attack_s1",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 1,
+    "file": "knight.glb",
+    "prompt": "Animate the exact armoured knight game model shown twice in this split-screen image. Left: a front camera, the knight faces the viewer. Right: a side camera on its right side, the knight faces right. Both are locked-off cameras filming the same knight at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a knight in full polished steel plate armour with a closed visored helmet, no weapon and no shield. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one head. No weapon, no shield, no cape, no other people. Action: the knight raises his fists into a boxing guard, throws a hard straight punch with his blue right fist and then a hook with his pink left fist, then returns to his guard. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Hit": {
+    "take": "hit_s3",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 3,
+    "file": "knight.glb",
+    "prompt": "Animate the exact armoured knight game model shown twice in this split-screen image. Left: a front camera, the knight faces the viewer. Right: a side camera on its right side, the knight faces right. Both are locked-off cameras filming the same knight at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a knight in full polished steel plate armour with a closed visored helmet, no weapon and no shield. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one head. No weapon, no shield, no cape, no other people. Action: the knight is struck hard in the chest, his upper body snaps back and he staggers one step backwards with his arms flung out, then he recovers his balance and stands upright. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Jump": {
+    "take": "jump_s1",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 1,
+    "file": "knight.glb",
+    "prompt": "Animate the exact armoured knight game model shown twice in this split-screen image. Left: a front camera, the knight faces the viewer. Right: a side camera on its right side, the knight faces right. Both are locked-off cameras filming the same knight at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a knight in full polished steel plate armour with a closed visored helmet, no weapon and no shield. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one head. No weapon, no shield, no cape, no other people. Action: the knight lowers his arms, bends his knees and jumps straight up so both feet leave the ground, swinging his arms up, then lands on both feet bending his knees and stands up again. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Kick": {
+    "take": "kick_s3",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 3,
+    "file": "knight.glb",
+    "prompt": "Animate the exact armoured knight game model shown twice in this split-screen image. Left: a front camera, the knight faces the viewer. Right: a side camera on its right side, the knight faces right. Both are locked-off cameras filming the same knight at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a knight in full polished steel plate armour with a closed visored helmet, no weapon and no shield. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one head. No weapon, no shield, no cape, no other people. Action: the knight raises his fists into a guard and delivers a powerful front kick straight forward with his cyan right leg, then puts the foot back down and stands in guard. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "ShoulderBash": {
+    "take": "bash_s6",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 6,
+    "file": "knight_flagged.glb",
+    "prompt": "Animate the exact armoured knight game model shown twice in this split-screen image. Left: a front camera, the knight faces the viewer. Right: a side camera on its right side, the knight faces right. Both are locked-off cameras filming the same knight at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a knight in full polished steel plate armour with a closed visored helmet, no weapon and no shield. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one head. No weapon, no shield, no cape, no other people. Action: the knight steps forward with his yellow left leg and drives his blue right shoulder forward in a powerful shoulder bash, then steps back to where he started and stands upright with his arms at his sides. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   }
+  }
+ },
+ "mech": {
+  "concept_model": "openai/gpt-image-2.5/flare/text-to-image",
+  "concept_prompt": "A two-legged walking mech 3D game model built from rigid armoured panels: a boxy armoured cockpit body on top, two big reverse-jointed bird-like legs with large flat three-toed feet, two short arms with three-fingered clamp hands held away from the body, painted industrial yellow and dark grey with black mechanical joints. No guns, no missiles, no antennas, no visible pilot. Standing in a neutral pose with the legs apart. Full body, three-quarter view from the front left. The whole body is in frame with space around it. Plain flat light grey studio background, soft even lighting, no ground shadow, no props, no text.",
+  "mesh_model": "tripo3d/h3.1/image-to-3d",
+  "clips": {
+   "Idle": {
+    "take": "idle_s3",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 3,
+    "file": "mech.glb",
+    "prompt": "Animate the exact two-legged walking mech game model shown twice in this split-screen image. Left: a front camera, the mech faces the viewer. Right: a side camera on its right side, the mech faces right. Both are locked-off cameras filming the same mech at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a heavy two-legged walking mech built from rigid industrial yellow and dark grey armoured panels, a boxy cockpit body, reverse-jointed bird-like legs with big three-toed feet and two short arms with clamp hands. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one cockpit body. No guns, no missiles, no smoke, no sparks, no pilot. Action: the mech stands in place idling, its cockpit body bobbing slightly on its legs and turning a little left and right, its arms twitching, both feet planted. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Walk": {
+    "take": "walk_s12",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 12,
+    "file": "mech.glb",
+    "prompt": "Animate the exact two-legged walking mech game model shown twice in this split-screen image. Left: a front camera, the mech faces the viewer. Right: a side camera on its right side, the mech faces right. Both are locked-off cameras filming the same mech at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a heavy two-legged walking mech built from rigid industrial yellow and dark grey armoured panels, a boxy cockpit body, reverse-jointed bird-like legs with big three-toed feet and two short arms with clamp hands. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one cockpit body. No guns, no missiles, no smoke, no sparks, no pilot. Action: the mech walks upright and steadily on the spot like a video-game walking loop, standing tall on its reverse-jointed legs, which always bend backwards like a bird's, never forwards like human knees; its yellow left leg and cyan right leg step in turn, and each flat metal foot is set down firmly and stays still on the floor, carrying the weight, until it lifts again, never sliding; its cockpit body rocks gently with each mechanical step. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Run": {
+    "take": "run_s4",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 4,
+    "file": "mech.glb",
+    "prompt": "Animate the exact two-legged walking mech game model shown twice in this split-screen image. Left: a front camera, the mech faces the viewer. Right: a side camera on its right side, the mech faces right. Both are locked-off cameras filming the same mech at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a heavy two-legged walking mech built from rigid industrial yellow and dark grey armoured panels, a boxy cockpit body, reverse-jointed bird-like legs with big three-toed feet and two short arms with clamp hands. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one cockpit body. No guns, no missiles, no smoke, no sparks, no pilot. Action: the mech jogs on the spot like a video-game running loop at a steady medium pace, its yellow left leg and cyan right leg lifting and stomping down in turn, its cockpit body bouncing slightly, staying the same size and in the same place in both views. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Attack": {
+    "take": "attack_s2",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 2,
+    "file": "mech.glb",
+    "prompt": "Animate the exact two-legged walking mech game model shown twice in this split-screen image. Left: a front camera, the mech faces the viewer. Right: a side camera on its right side, the mech faces right. Both are locked-off cameras filming the same mech at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a heavy two-legged walking mech built from rigid industrial yellow and dark grey armoured panels, a boxy cockpit body, reverse-jointed bird-like legs with big three-toed feet and two short arms with clamp hands. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one cockpit body. No guns, no missiles, no smoke, no sparks, no pilot. Action: the mech swings its blue right arm forward in a heavy punch with its clamp hand, then pulls the arm back and stands still again. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Hit": {
+    "take": "hit_s3",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 3,
+    "file": "mech.glb",
+    "prompt": "Animate the exact two-legged walking mech game model shown twice in this split-screen image. Left: a front camera, the mech faces the viewer. Right: a side camera on its right side, the mech faces right. Both are locked-off cameras filming the same mech at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a heavy two-legged walking mech built from rigid industrial yellow and dark grey armoured panels, a boxy cockpit body, reverse-jointed bird-like legs with big three-toed feet and two short arms with clamp hands. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one cockpit body. No guns, no missiles, no smoke, no sparks, no pilot. Action: the mech is struck hard on its cockpit, its body jolts back and it staggers one step on its legs, then it steadies and stands still again. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Jump": {
+    "take": "jump_s2",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 2,
+    "file": "mech.glb",
+    "prompt": "Animate the exact two-legged walking mech game model shown twice in this split-screen image. Left: a front camera, the mech faces the viewer. Right: a side camera on its right side, the mech faces right. Both are locked-off cameras filming the same mech at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a heavy two-legged walking mech built from rigid industrial yellow and dark grey armoured panels, a boxy cockpit body, reverse-jointed bird-like legs with big three-toed feet and two short arms with clamp hands. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one cockpit body. No guns, no missiles, no smoke, no sparks, no pilot. Action: the mech crouches on its legs and jumps up so both feet leave the ground, then lands heavily bending its legs to absorb the impact and stands still again. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Stomp": {
+    "take": "stomp_s2",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 2,
+    "file": "mech.glb",
+    "prompt": "Animate the exact two-legged walking mech game model shown twice in this split-screen image. Left: a front camera, the mech faces the viewer. Right: a side camera on its right side, the mech faces right. Both are locked-off cameras filming the same mech at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a heavy two-legged walking mech built from rigid industrial yellow and dark grey armoured panels, a boxy cockpit body, reverse-jointed bird-like legs with big three-toed feet and two short arms with clamp hands. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one cockpit body. No guns, no missiles, no smoke, no sparks, no pilot. Action: the mech lifts its cyan right leg high and stomps it down hard onto the ground, its whole body shaking with the impact, then stands still again. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   }
+  }
+ },
+ "ogre": {
+  "concept_model": "blackforestlabs/flux-3/text-to-image",
+  "concept_prompt": "A huge muscular ogre 3D game character with green-grey skin, a big round belly, very thick heavy arms with large hands, short thick legs, a bald head with two small lower tusks, wearing only a short brown cloth loincloth tied tight. He stands in an A-pose with his big arms held out away from his body, hands open, legs apart, feet flat. No weapon, no club, no jewellery, no belt items. Full body, three-quarter view from the front left. The whole body is in frame with space around it. Plain flat light grey studio background, soft even lighting, no ground shadow, no props, no text.",
+  "mesh_model": "tripo3d/h3.1/image-to-3d",
+  "clips": {
+   "Idle": {
+    "take": "idle_s2",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 2,
+    "file": "ogre.glb",
+    "prompt": "Animate the exact ogre game model shown twice in this split-screen image. Left: a front camera, the ogre faces the viewer. Right: a side camera on its right side, the ogre faces right. Both are locked-off cameras filming the same ogre at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a huge green-grey ogre with a big round belly, very thick heavy arms with large hands, short thick legs, a bald head with small tusks and a short brown loincloth. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one head. No weapon, no club, no other creatures. Action: the ogre stands calmly in place with both arms hanging straight and relaxed at its sides, breathing and shifting its weight gently from one leg to the other, both feet planted. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Walk": {
+    "take": "walk_s2",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 2,
+    "file": "ogre.glb",
+    "prompt": "Animate the exact ogre game model shown twice in this split-screen image. Left: a front camera, the ogre faces the viewer. Right: a side camera on its right side, the ogre faces right. Both are locked-off cameras filming the same ogre at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a huge green-grey ogre with a big round belly, very thick heavy arms with large hands, short thick legs, a bald head with small tusks and a short brown loincloth. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one head. No weapon, no club, no other creatures. Action: the ogre lowers its arms and walks heavily on the spot like a video-game walking loop, its yellow left leg and cyan right leg stomping in turn, its huge arms swinging, its body swaying with weight. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Run": {
+    "take": "run_s3",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 3,
+    "file": "ogre.glb",
+    "prompt": "Animate the exact ogre game model shown twice in this split-screen image. Left: a front camera, the ogre faces the viewer. Right: a side camera on its right side, the ogre faces right. Both are locked-off cameras filming the same ogre at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a huge green-grey ogre with a big round belly, very thick heavy arms with large hands, short thick legs, a bald head with small tusks and a short brown loincloth. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one head. No weapon, no club, no other creatures. Action: the ogre lowers its arms and runs heavily on the spot like a video-game running loop, a lumbering run with its yellow left leg and cyan right leg pounding in turn and its big arms pumping. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Attack": {
+    "take": "attack_s3",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 3,
+    "file": "ogre.glb",
+    "prompt": "Animate the exact ogre game model shown twice in this split-screen image. Left: a front camera, the ogre faces the viewer. Right: a side camera on its right side, the ogre faces right. Both are locked-off cameras filming the same ogre at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a huge green-grey ogre with a big round belly, very thick heavy arms with large hands, short thick legs, a bald head with small tusks and a short brown loincloth. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one head. No weapon, no club, no other creatures. Action: the ogre raises its blue right fist high and swings a huge heavy punch forward and down, its whole body following the blow, then straightens up and stands still again. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Hit": {
+    "take": "hit_s3",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 3,
+    "file": "ogre.glb",
+    "prompt": "Animate the exact ogre game model shown twice in this split-screen image. Left: a front camera, the ogre faces the viewer. Right: a side camera on its right side, the ogre faces right. Both are locked-off cameras filming the same ogre at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a huge green-grey ogre with a big round belly, very thick heavy arms with large hands, short thick legs, a bald head with small tusks and a short brown loincloth. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one head. No weapon, no club, no other creatures. Action: the ogre is struck hard on the jaw, its head and upper body twist back and it staggers one heavy step, then it recovers and stands still again. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Jump": {
+    "take": "jump_s3",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 3,
+    "file": "ogre_flagged.glb",
+    "prompt": "Animate the exact ogre game model shown twice in this split-screen image. Left: a front camera, the ogre faces the viewer. Right: a side camera on its right side, the ogre faces right. Both are locked-off cameras filming the same ogre at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a huge green-grey ogre with a big round belly, very thick heavy arms with large hands, short thick legs, a bald head with small tusks and a short brown loincloth. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one head. No weapon, no club, no other creatures. Action: the ogre lowers its arms, bends its knees and heaves itself up off the ground so both feet leave the floor, then lands heavily bending its knees and stands up again. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "GroundSlam": {
+    "take": "slam_s4",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 4,
+    "file": "ogre.glb",
+    "prompt": "Animate the exact ogre game model shown twice in this split-screen image. Left: a front camera, the ogre faces the viewer. Right: a side camera on its right side, the ogre faces right. Both are locked-off cameras filming the same ogre at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a huge green-grey ogre with a big round belly, very thick heavy arms with large hands, short thick legs, a bald head with small tusks and a short brown loincloth. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one head. No weapon, no club, no other creatures. Action: the ogre clasps both fists together in front of its chest, bends forward and slams them down hard onto the ground in front of it while its feet stay planted, then straightens up and stands still again, its fists never rising above its head. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   }
+  }
+ },
+ "scorpion": {
+  "concept_model": "openai/gpt-image-2.5/flare/text-to-image",
+  "concept_prompt": "A giant photorealistic scorpion 3D game creature seen from the front and high above at a steep angle, perfectly symmetric left and right. It has exactly eight walking legs, four on its left side and four on its right side, all eight clearly visible, evenly spaced and spread wide apart so no leg touches another. Two large pincer claws held forward and slightly open, one on each side. A long segmented tail arched up over its back ending in a curved stinger. Glossy dark brown-black armoured exoskeleton with amber leg joints. The whole body is in frame with space around it. Plain flat light grey studio background, soft even lighting, no ground shadow, no props, no text.",
+  "mesh_model": "tripo3d/h3.1/image-to-3d",
+  "clips": {
+   "Idle": {
+    "take": "idle_s1",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 1,
+    "file": "scorpion_flagged.glb",
+    "prompt": "Animate the exact giant scorpion game model shown twice in this split-screen image. Left: a front camera, the scorpion faces the viewer. Right: a side camera on its right side, the scorpion faces right. Both are locked-off cameras filming the same scorpion at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a giant scorpion with a glossy dark brown-black armoured exoskeleton and amber leg joints, two big pincer claws and a segmented tail arched over its back ending in a curved stinger. Its limbs are colour-coded and the colours never change or swap: left claw pink, right claw blue; first left leg yellow, first right leg cyan; second left leg orange, second right leg green; third left leg purple, third right leg red; fourth left leg white, fourth right leg black. Exactly eight legs, two claws, one tail with one stinger. No other creatures, no sand, no dust. Action: the scorpion stands in place, its claws slowly opening and closing and its tail swaying gently above its back, its eight legs planted. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Attack": {
+    "take": "attack_s1",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 1,
+    "file": "scorpion.glb",
+    "prompt": "Animate the exact giant scorpion game model shown twice in this split-screen image. Left: a front camera, the scorpion faces the viewer. Right: a side camera on its right side, the scorpion faces right. Both are locked-off cameras filming the same scorpion at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a giant scorpion with a glossy dark brown-black armoured exoskeleton and amber leg joints, two big pincer claws and a segmented tail arched over its back ending in a curved stinger. Its limbs are colour-coded and the colours never change or swap: left claw pink, right claw blue; first left leg yellow, first right leg cyan; second left leg orange, second right leg green; third left leg purple, third right leg red; fourth left leg white, fourth right leg black. Exactly eight legs, two claws, one tail with one stinger. No other creatures, no sand, no dust. Action: the scorpion lunges forward and snaps both claws shut in front of it, then pulls back to standing still. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Hit": {
+    "take": "hit_s2",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 2,
+    "file": "scorpion.glb",
+    "prompt": "Animate the exact giant scorpion game model shown twice in this split-screen image. Left: a front camera, the scorpion faces the viewer. Right: a side camera on its right side, the scorpion faces right. Both are locked-off cameras filming the same scorpion at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a giant scorpion with a glossy dark brown-black armoured exoskeleton and amber leg joints, two big pincer claws and a segmented tail arched over its back ending in a curved stinger. Its limbs are colour-coded and the colours never change or swap: left claw pink, right claw blue; first left leg yellow, first right leg cyan; second left leg orange, second right leg green; third left leg purple, third right leg red; fourth left leg white, fourth right leg black. Exactly eight legs, two claws, one tail with one stinger. No other creatures, no sand, no dust. Action: the scorpion is struck hard on its left side, its body jolts to its right and its legs scramble, then it steadies and stands still again. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Jump": {
+    "take": "jump_s2",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 2,
+    "file": "scorpion.glb",
+    "prompt": "Animate the exact giant scorpion game model shown twice in this split-screen image. Left: a front camera, the scorpion faces the viewer. Right: a side camera on its right side, the scorpion faces right. Both are locked-off cameras filming the same scorpion at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a giant scorpion with a glossy dark brown-black armoured exoskeleton and amber leg joints, two big pincer claws and a segmented tail arched over its back ending in a curved stinger. Its limbs are colour-coded and the colours never change or swap: left claw pink, right claw blue; first left leg yellow, first right leg cyan; second left leg orange, second right leg green; third left leg purple, third right leg red; fourth left leg white, fourth right leg black. Exactly eight legs, two claws, one tail with one stinger. No other creatures, no sand, no dust. Action: the scorpion crouches and springs up so all its legs leave the ground, then lands on all eight legs and stands still again. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Sting": {
+    "take": "sting_s1",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 1,
+    "file": "scorpion_flagged.glb",
+    "prompt": "Animate the exact giant scorpion game model shown twice in this split-screen image. Left: a front camera, the scorpion faces the viewer. Right: a side camera on its right side, the scorpion faces right. Both are locked-off cameras filming the same scorpion at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a giant scorpion with a glossy dark brown-black armoured exoskeleton and amber leg joints, two big pincer claws and a segmented tail arched over its back ending in a curved stinger. Its limbs are colour-coded and the colours never change or swap: left claw pink, right claw blue; first left leg yellow, first right leg cyan; second left leg orange, second right leg green; third left leg purple, third right leg red; fourth left leg white, fourth right leg black. Exactly eight legs, two claws, one tail with one stinger. No other creatures, no sand, no dust. Action: the scorpion arches its tail forward over its head and strikes down hard with its stinger in front of it, then pulls the tail back up over its back. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "ClawSnap": {
+    "take": "clawsnap_s1",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 1,
+    "file": "scorpion.glb",
+    "prompt": "Animate the exact giant scorpion game model shown twice in this split-screen image. Left: a front camera, the scorpion faces the viewer. Right: a side camera on its right side, the scorpion faces right. Both are locked-off cameras filming the same scorpion at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a giant scorpion with a glossy dark brown-black armoured exoskeleton and amber leg joints, two big pincer claws and a segmented tail arched over its back ending in a curved stinger. Its limbs are colour-coded and the colours never change or swap: left claw pink, right claw blue; first left leg yellow, first right leg cyan; second left leg orange, second right leg green; third left leg purple, third right leg red; fourth left leg white, fourth right leg black. Exactly eight legs, two claws, one tail with one stinger. No other creatures, no sand, no dust. Action: the scorpion raises both claws and snaps them open and shut several times, then lowers them to standing still. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   }
+  }
+ },
+ "trex": {
+  "concept_model": "blackforestlabs/flux-3/text-to-image",
+  "concept_prompt": "A photorealistic Tyrannosaurus rex 3D game character, full body, seen in a three-quarter view from the front left. It stands still in a neutral pose on its two thick legs, feet planted well apart, body horizontal, its heavy muscular tail held straight out behind it, its two tiny two-fingered arms held slightly forward and clear of the chest, jaws slightly parted showing teeth. Dark olive-brown pebbled scaly skin with a paler belly. The whole animal from snout to tail tip and both feet is in frame with space around it. Plain flat light grey studio background, soft even lighting, no ground shadow, no props, no text.",
+  "mesh_model": "tripo3d/h3.1/image-to-3d",
+  "clips": {
+   "Idle": {
+    "take": "idle_s2",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 2,
+    "file": "trex.glb",
+    "prompt": "Animate the exact Tyrannosaurus rex game model shown twice in this split-screen image. Left: a front camera, the T-rex faces the viewer. Right: a side camera on its right flank, the T-rex faces right. Both are locked-off cameras filming the same T-rex at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a huge photorealistic Tyrannosaurus rex with dark olive-brown scaly skin and a paler belly, a massive head, two tiny arms and a long heavy tail. Its limbs are colour-coded and the colours never change or swap: left leg pink, right leg blue, tiny left arm yellow, tiny right arm cyan. Exactly two legs, two tiny arms, one tail, one head. No other animals, no dust, no debris. Action: the T-rex stands in place breathing slowly, its chest rising and falling, it turns its head slowly to look left and then right and its tail sways a little, both feet stay planted on the ground. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Walk": {
+    "take": "walk_s14",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 14,
+    "file": "trex.glb",
+    "prompt": "Animate the exact Tyrannosaurus rex game model shown twice in this split-screen image. Left: a front camera, the T-rex faces the viewer. Right: a side camera on its right flank, the T-rex faces right. Both are locked-off cameras filming the same T-rex at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a huge photorealistic Tyrannosaurus rex with dark olive-brown scaly skin and a paler belly, a massive head, two tiny arms and a long heavy tail. Its limbs are colour-coded and the colours never change or swap: left leg pink, right leg blue, tiny left arm yellow, tiny right arm cyan. Exactly two legs, two tiny arms, one tail, one head. No other animals, no dust, no debris. Action: the T-rex walks slowly and heavily on the spot like a video-game walking loop, its pink left leg and blue right leg stepping in turn with a long, deliberate stride; each huge foot is set down flat and stays still on the floor, carrying the weight, until it lifts again, never sliding; its body rocks gently over the planted foot, its tail sways for balance and its head stays level. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Run": {
+    "take": "run_s3",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 3,
+    "file": "trex.glb",
+    "prompt": "Animate the exact Tyrannosaurus rex game model shown twice in this split-screen image. Left: a front camera, the T-rex faces the viewer. Right: a side camera on its right flank, the T-rex faces right. Both are locked-off cameras filming the same T-rex at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a huge photorealistic Tyrannosaurus rex with dark olive-brown scaly skin and a paler belly, a massive head, two tiny arms and a long heavy tail. Its limbs are colour-coded and the colours never change or swap: left leg pink, right leg blue, tiny left arm yellow, tiny right arm cyan. Exactly two legs, two tiny arms, one tail, one head. No other animals, no dust, no debris. Action: the T-rex runs powerfully on the spot like a video-game running loop, long fast strides with its pink left leg and blue right leg pounding in turn, its body leaning forward and its tail held straight out behind for balance. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Attack": {
+    "take": "attack_s3",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 3,
+    "file": "trex.glb",
+    "prompt": "Animate the exact Tyrannosaurus rex game model shown twice in this split-screen image. Left: a front camera, the T-rex faces the viewer. Right: a side camera on its right flank, the T-rex faces right. Both are locked-off cameras filming the same T-rex at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a huge photorealistic Tyrannosaurus rex with dark olive-brown scaly skin and a paler belly, a massive head, two tiny arms and a long heavy tail. Its limbs are colour-coded and the colours never change or swap: left leg pink, right leg blue, tiny left arm yellow, tiny right arm cyan. Exactly two legs, two tiny arms, one tail, one head. No other animals, no dust, no debris. Action: the T-rex lunges its head forward and down and snaps its jaws shut hard on prey, shakes its head once, then pulls its head back up and stands still again. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Hit": {
+    "take": "hit_s2",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 2,
+    "file": "trex.glb",
+    "prompt": "Animate the exact Tyrannosaurus rex game model shown twice in this split-screen image. Left: a front camera, the T-rex faces the viewer. Right: a side camera on its right flank, the T-rex faces right. Both are locked-off cameras filming the same T-rex at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a huge photorealistic Tyrannosaurus rex with dark olive-brown scaly skin and a paler belly, a massive head, two tiny arms and a long heavy tail. Its limbs are colour-coded and the colours never change or swap: left leg pink, right leg blue, tiny left arm yellow, tiny right arm cyan. Exactly two legs, two tiny arms, one tail, one head. No other animals, no dust, no debris. Action: the T-rex is struck hard on the left side of its head, its head and body recoil to its right and it staggers half a step, then it recovers and stands still again. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Jump": {
+    "take": "jump_s4",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 4,
+    "file": "trex.glb",
+    "prompt": "Animate the exact Tyrannosaurus rex game model shown twice in this split-screen image. Left: a front camera, the T-rex faces the viewer. Right: a side camera on its right flank, the T-rex faces right. Both are locked-off cameras filming the same T-rex at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a huge photorealistic Tyrannosaurus rex with dark olive-brown scaly skin and a paler belly, a massive head, two tiny arms and a long heavy tail. Its limbs are colour-coded and the colours never change or swap: left leg pink, right leg blue, tiny left arm yellow, tiny right arm cyan. Exactly two legs, two tiny arms, one tail, one head. No other animals, no dust, no debris. Action: the T-rex crouches deep on both legs, then leaps powerfully upward so that both of its huge feet clearly leave the ground and its whole body is in the air for a moment, then it lands heavily on both feet, bending its legs to absorb the impact, and stands still again. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Roar": {
+    "take": "roar_s3",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 3,
+    "file": "trex.glb",
+    "prompt": "Animate the exact Tyrannosaurus rex game model shown twice in this split-screen image. Left: a front camera, the T-rex faces the viewer. Right: a side camera on its right flank, the T-rex faces right. Both are locked-off cameras filming the same T-rex at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: a huge photorealistic Tyrannosaurus rex with dark olive-brown scaly skin and a paler belly, a massive head, two tiny arms and a long heavy tail. Its limbs are colour-coded and the colours never change or swap: left leg pink, right leg blue, tiny left arm yellow, tiny right arm cyan. Exactly two legs, two tiny arms, one tail, one head. No other animals, no dust, no debris. Action: the T-rex raises its head, opens its jaws very wide and roars with its whole body tensing, then closes its jaws and lowers its head back to standing. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   }
+  }
+ },
+ "woman": {
+  "concept_model": "blackforestlabs/flux-3/text-to-image",
+  "concept_prompt": "A realistic athletic young woman 3D game character wearing plain fitted sportswear: a black sports top, fitted black leggings and white running shoes, her hair pulled into a tight bun. She stands in an A-pose: arms straight and held out about forty degrees away from her body, open hands, legs straight and slightly apart, feet flat. Full body, three-quarter view from the front left. The whole body is in frame with space around it. Plain flat light grey studio background, soft even lighting, no ground shadow, no props, no text.",
+  "mesh_model": "tripo3d/h3.1/image-to-3d",
+  "clips": {
+   "Idle": {
+    "take": "idle_s2",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 2,
+    "file": "woman.glb",
+    "prompt": "Animate the exact athletic woman game model shown twice in this split-screen image. Left: a front camera, the woman faces the viewer. Right: a side camera on its right side, the woman faces right. Both are locked-off cameras filming the same woman at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: an athletic young woman in a plain black sports top, fitted black leggings and white running shoes, her hair in a tight bun. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one head. No props, no other people. Action: the woman stands calmly in place with both arms hanging straight and relaxed at her sides, breathing and shifting her weight gently from one leg to the other, both feet planted. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Walk": {
+    "take": "walk_s3",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 3,
+    "file": "woman.glb",
+    "prompt": "Animate the exact athletic woman game model shown twice in this split-screen image. Left: a front camera, the woman faces the viewer. Right: a side camera on its right side, the woman faces right. Both are locked-off cameras filming the same woman at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: an athletic young woman in a plain black sports top, fitted black leggings and white running shoes, her hair in a tight bun. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one head. No props, no other people. Action: the woman lowers her arms and walks on the spot like a video-game walking loop, her yellow left leg and cyan right leg stepping in turn, her arms swinging naturally opposite to her legs. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Run": {
+    "take": "run_s3",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 3,
+    "file": "woman.glb",
+    "prompt": "Animate the exact athletic woman game model shown twice in this split-screen image. Left: a front camera, the woman faces the viewer. Right: a side camera on its right side, the woman faces right. Both are locked-off cameras filming the same woman at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: an athletic young woman in a plain black sports top, fitted black leggings and white running shoes, her hair in a tight bun. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one head. No props, no other people. Action: the woman lowers her arms and runs on the spot like a video-game running loop, an athletic stride with knees lifting, her yellow left leg and cyan right leg in turn, her arms bent and pumping. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Hit": {
+    "take": "hit_s5",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 5,
+    "file": "woman_flagged.glb",
+    "prompt": "Animate the exact athletic woman game model shown twice in this split-screen image. Left: a front camera, the woman faces the viewer. Right: a side camera on its right side, the woman faces right. Both are locked-off cameras filming the same woman at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: an athletic young woman in a plain black sports top, fitted black leggings and white running shoes, her hair in a tight bun. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one head. No props, no other people. Action: the woman is struck hard in the stomach, she hunches forward and takes one short step back with each foot, then straightens up and stands upright with her arms at her sides. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Jump": {
+    "take": "jump_s2",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 2,
+    "file": "woman_flagged.glb",
+    "prompt": "Animate the exact athletic woman game model shown twice in this split-screen image. Left: a front camera, the woman faces the viewer. Right: a side camera on its right side, the woman faces right. Both are locked-off cameras filming the same woman at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: an athletic young woman in a plain black sports top, fitted black leggings and white running shoes, her hair in a tight bun. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one head. No props, no other people. Action: the woman lowers her arms, crouches and jumps straight up so both feet leave the ground, swinging her arms up, then lands softly bending her knees and stands up again. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   },
+   "Kick": {
+    "take": "kick_s3",
+    "video_model": "minimax/h3-max/image-to-video",
+    "seed": 3,
+    "file": "woman.glb",
+    "prompt": "Animate the exact athletic woman game model shown twice in this split-screen image. Left: a front camera, the woman faces the viewer. Right: a side camera on its right side, the woman faces right. Both are locked-off cameras filming the same woman at the same moment, so every movement happens in both views at exactly the same time, frame for frame. Keep the model exactly as it is: an athletic young woman in a plain black sports top, fitted black leggings and white running shoes, her hair in a tight bun. Its limbs are colour-coded and the colours never change or swap: left arm pink, right arm blue, left leg yellow, right leg cyan. Exactly two arms, two legs, one head. No props, no other people. Action: the woman raises her fists into a guard and delivers a high roundhouse kick with her cyan right leg, then brings the leg back down and stands in guard. It stays on the same spot, centred in both views. One continuous 5-second shot at natural speed, no slow motion. The cameras never move, cut, pan or zoom; the plain grey studio background, the floor band and the dark vertical divider stay fixed."
+   }
+  }
+ }
+}
