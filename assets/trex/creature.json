@@ -112,5 +112,6 @@
    -25
   ]
  },
- "fix_front_swaps": true
+ "fix_front_swaps": true,
+  "camera": {"cam": "-23.981,-17.746,11.010", "target": "-0.071,0.034,3.653", "lens": 40}
 }
