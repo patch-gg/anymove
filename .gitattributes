@@ -1,0 +1,2 @@
+# Line endings stay LF on every OS: bash on Windows reads a script with CRLF as commands ending in .
+* text=auto eol=lf

@@ -10,7 +10,7 @@ a=assets/$1; n=${2:-2200}; p=${3:-3}; seed=${4:-500}
 per=$(( (n + p - 1) / p ))
 mkdir -p "runs/$1/dataset"
 for k in $(seq 0 $((p - 1))); do
-  $BLENDER -b -P blender/render_dataset.py -- "$a/rigged/rigged.blend" "$a/rigged/rig_info.json" "runs/$1/dataset" \
+  run_blender -b -P blender/render_dataset.py -- "$a/rigged/rigged.blend" "$a/rigged/rig_info.json" "runs/$1/dataset" \
     $((k * per)) "$per" "$seed" > "runs/$1/dataset_$k.log" 2>&1 &
 done
 wait
