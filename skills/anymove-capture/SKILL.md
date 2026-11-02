@@ -27,7 +27,7 @@ the clip), `motion.json` (the fit: root path and rotation, Euler angles per bone
 3. **Fit.** Blender's forward kinematics in torch, Euler angles bounded by the joint limits, fitted to both views at
    once. Heights come mostly from the side view (the front view foreshortens leg lifts), left-right from the front
    view. It starts from an analytic IK pose aimed at the triangulated joints and anneals a robust loss from 40 px to
-   6 px, so big poses (sit, rear, slam) are found. Under a minute for 5 s (20 s for the dragon's roar on a CPU).
+   6 px, so big poses (sit, rear, slam) are found. Under a minute for 5 s (about 90 s for the dragon's roar on a CPU).
 4. **Export.** Blender keys the rig, writes the GLB and renders the views.
 
 ## Is it good? Read the solve output
@@ -53,12 +53,17 @@ reprojection error px: {'front': 5.92, 'front_x_only': 2.55, 'side': 7.99}
 
 - Legs crossed or a limb flipped side to side in the side view: the painted colours make labels reliable, so swap
   fixing is off. `python -m mocap.solve ... --fix-swaps` swaps near/far legs where heights say the reader mixed them
-  up; it "fixed" correct labels on one clip, so only use it after looking. (Leg names are the wolf's; other
-  creatures need `LEGS` in `mocap/solve.py` extended.)
+  up; it "fixed" correct labels on one clip, so only use it after looking. Its pairs come from creature.json's `paint`
+  groups. If the video dropped the paint and the front view swaps feet, set `"fix_front_swaps": true` in creature.json.
 - The fit stays standing while the clip sits or rears: check `overlay.mp4`; if the readings are right, the limits in
   rig.json are too tight for the pose.
-- Feet slide or sink: the solver's ground term knows paw names starting `fpaw`, `ftoe`, `hpaw`, `htoe` (wolf,
-  dragon); other creatures get no ground penalty yet.
+- Feet slide or sink: contact joints come from creature.json `contacts`, or default to every painted-limb joint near
+  the ground at rest. Check the solve output's `planted contacts` line. 1 to 2 cm a step is as good as it gets for now.
+- A low-confidence wrong reading the fit rightly ignored still counts in `reproj_px`. `reproj_confident_px` leaves
+  those out, so judge by it. Limbs behind the body read badly from the side, so `tools/score_takes.py` also reports
+  `side_near`, the near side alone.
+- One joint chain won't fit, such as a tail: `--joint-weight` and `--joint-sigma` weight it by name prefix, though that
+  didn't rescue the T-rex's tail swipe.
 - Run `--no-align` to skip the time warp when the views were already in step and it hurt.
 
 Debug views: `python tools/fit_check.py VIDEO runs/<c>/clips/<name> out.jpg 10 40 80` (readings as rings, fitted
@@ -73,9 +78,11 @@ MOCAP_CREATURE=assets/<c> blender -b -P blender/apply_motion.py -- assets/<c>/ri
   --views persp --samples 16 --res 1152x648 --cam -5.4,-6.0,1.4 --target 0,-0.3,1.5 --lens 32
 ```
 
-`tools/capture.sh` uses creature.json `"camera"` for its 3/4 renders. Options take a space, never `=`. Frame the
-creature to its whole clip, not its rest pose: read the joint heights
-from the render's `joints.json` (the demon flew to 5.3 m), then check every frame's alpha bounding box. Cameras that
+`tools/capture.sh` uses creature.json `"camera"` for its 3/4 renders, and without one frames the take itself
+(`tools/frame_camera.py`). So the takes share one camera, save one that frames them all:
+`python tools/frame_camera.py --write assets/<c>/creature.json runs/<c>/clips/*/motion.json`. Options take a space, never
+`=`. Frame the creature to its whole clip, not its rest pose: read the joint heights from the render's `joints.json` (the
+demon flew to 5.3 m), then check every frame's alpha bounding box. Cameras that
 worked: dragon `--cam -5.4,-6.0,1.4 --target 0,-0.3,1.5`, spider `-3.3,-3.65,1.3 / 0,-0.1,0.78`, demon
 `-6.4,-7.1,1.8 / 0,-0.1,2.1` (flying: `-7.4,-8.3,2.1 / 0,-0.1,2.6`). The shadow catcher leaves a faint denoiser haze
 in the alpha; when compositing, drop alpha under 10/255. `--springs assets/wolf/fur.json` adds damped spring fur on

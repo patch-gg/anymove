@@ -13,8 +13,8 @@ for the prompt), `rig.json` (the skeleton). Copy a close example to start: `asse
 
 ## 1. The mesh
 
-- Any textured GLB works. anymove's examples are Tripo H3.1 (`tripo3d/h3.1/image-to-3d` on fal, $0.40 with HD
-  texture) from one FLUX 3 concept image: a plain 3/4 view of the creature on a neutral background, whole body in
+- Any textured GLB works. `tools/make_mesh.py` makes one on fal. anymove's examples are Tripo H3.1
+  (`tripo3d/h3.1/image-to-3d` on fal, $0.40 with HD texture) from one FLUX 3 concept image: a plain 3/4 view of the creature on a neutral background, whole body in
   frame, limbs apart and clearly separate.
 - Prefer a design where every limb reads separately. Fire, smoke, capes, weapons and long hair hide joints from the
   reader later; leave them to game VFX.
@@ -52,6 +52,8 @@ Metres in the prepped mesh's frame: the creature faces -Y, its left is +X, Z is 
   mirrored too. Joints at bone ends are what the reader learns to find, so put one at every place the video should
   control: paw tips, wing tips, tail segments (6 for a long tail), jaw if the mouth opens.
 - `limits_deg`: per bone name, or per stem without `_L`/`_R`: [[x lo, x hi], [y lo, y hi], [z lo, z hi]] in degrees.
+  **Mirrored bones share a local Z axis,** so the same Z angle raises one arm and pushes the other across the body. If a
+  stem's Z range isn't symmetric, give each side its own, mirrored: `upperarm_L` z `[-90, 55]`, `upperarm_R` z `[-55, 90]`.
   Local X is the bending axis (world X for bones in the body's plane), Y runs along the bone (twist: small for spine
   and legs, ±8-20; arms can need ±40), Z swings sideways. Limits shape the training poses as well as the fit: too wide
   and the reader learns impossible poses, too narrow and it can't read the move.
