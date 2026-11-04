@@ -51,7 +51,7 @@ READER = ROOT / "runs" / "wolf" / "reader.pt"
 #: reference, same prompt, same seed, same dimensions - only the adapter chain
 #: differs. The engine label is explicit rather than derived from the file
 #: name, because three engines now share one naming scheme.
-JOBS = [
+PUBLISHED_JOBS = [
     ("shake", VIDEOS / "shake" / "s1" / "h3-local-shake.mp4", "h3-local-shake", False, "base H3"),
     ("shake", VIDEOS / "shake" / "s1" / "h3-pika-shake.mp4", "h3-pika-shake", False, "Pika FL2V"),
     ("shake", VIDEOS / "shake" / "s1" / "h3-vbvr-shake.mp4", "h3-vbvr-shake", False, "base+VBVR"),
@@ -67,6 +67,30 @@ JOBS = [
     ("r2v-side", VIDEOS / "shake" / "s1" / "h3-pika-r2v-shake-side.mp4",
      "h3-pika-r2v-shake-side", True, "Pika R2V"),
 ]
+
+#: The SAME-SESSION re-films (2026-11-05): every move, every engine, one day,
+#: one machine state. The published set was filmed across three days
+#: (2026-10-31, 11-03/04) on a machine whose ComfyUI lane state changed between
+#: days, so its wall clock is NOT a controlled comparison - this set is. The
+#: prompts, seeds, samplers, schedule, VAE and reference are the same per move.
+TODAY_JOBS = [
+    ("shake", VIDEOS / "shake" / "s1" / "h3-base-today-shake.mp4", "h3-base-today-shake", False, "base H3"),
+    ("shake", VIDEOS / "shake" / "s1" / "h3-pika-today-shake.mp4", "h3-pika-today-shake", False, "Pika FL2V"),
+    ("shake", VIDEOS / "shake" / "s1" / "h3-vbvr-today-shake.mp4", "h3-vbvr-today-shake", False, "base+VBVR"),
+    ("gallop", VIDEOS / "gallop" / "s1" / "h3-base-today-gallop.mp4", "h3-base-today-gallop", False, "base H3"),
+    ("gallop", VIDEOS / "gallop" / "s1" / "h3-pika-today-gallop.mp4", "h3-pika-today-gallop", False, "Pika FL2V"),
+    ("gallop", VIDEOS / "gallop" / "s1" / "h3-vbvr-today-gallop.mp4", "h3-vbvr-today-gallop", False, "base+VBVR"),
+    ("howl", VIDEOS / "howl" / "s1" / "h3-base-today-howl.mp4", "h3-base-today-howl", False, "base H3"),
+    ("howl", VIDEOS / "howl" / "s1" / "h3-pika-today-howl.mp4", "h3-pika-today-howl", False, "Pika FL2V"),
+    ("howl", VIDEOS / "howl" / "s1" / "h3-vbvr-today-howl.mp4", "h3-vbvr-today-howl", False, "base+VBVR"),
+    ("pounce", VIDEOS / "pounce" / "s1" / "h3-base-today-pounce.mp4", "h3-base-today-pounce", False, "base H3"),
+    ("pounce", VIDEOS / "pounce" / "s1" / "h3-pika-today-pounce.mp4", "h3-pika-today-pounce", False, "Pika FL2V"),
+    ("pounce", VIDEOS / "pounce" / "s1" / "h3-vbvr-today-pounce.mp4", "h3-vbvr-today-pounce", False, "base+VBVR"),
+]
+
+#: Which set to read. "published" is the three-day set the docs quote;
+#: "today" is the one-day controlled re-film of the same twelve clips.
+SETS = {"published": lambda: PUBLISHED_JOBS, "today": lambda: TODAY_JOBS}
 
 
 def run(cmd: list[str], label: str) -> int:
@@ -100,15 +124,20 @@ def read_one(clip: Path, name: str, single: bool, device: str = "cpu") -> dict:
 def main() -> int:
     ap = argparse.ArgumentParser(description="read the Pika clips through the house chain")
     ap.add_argument("--only", default="", help="comma-separated job keys")
+    ap.add_argument("--set", default="published", choices=tuple(SETS),
+                    help="'published' is the three-day set the docs quote; 'today' "
+                         "is the one-day controlled re-film of the same twelve "
+                         "clips, so the read and the wall clock are comparable.")
     ap.add_argument("--device", default="cpu", choices=("cpu", "cuda"),
                     help="where the joint reader runs. The reader needs ~2.4 GB of "
                          "VRAM; on this box the other ComfyUI lane holds the card, "
                          "so cpu is the contention-free default.")
     args = ap.parse_args()
     wanted = {k.strip() for k in args.only.split(",") if k.strip()}
+    jobs = SETS[args.set]()
 
     results = []
-    for key, clip, name, single, _engine in JOBS:
+    for key, clip, name, single, _engine in jobs:
         if wanted and key not in wanted:
             continue
         if not clip.is_file():
@@ -122,10 +151,11 @@ def main() -> int:
     print("\n" + "=" * 104)
     print("READ ACCURACY - the plain upstream read, except the R2V clip (single view, 2.5D)")
     print(f"reader device: {args.device}")
+    print(f"clip set: {args.set}")
     print("=" * 104)
     print(f"{'clip':<24}{'engine':<12}{'front px':>10}{'side px':>10}{'sync px':>10}"
           f"{'conf f/s':>12}{'calib':>10}{'read':>8}")
-    for (key, clip, name, single, engine) in JOBS:
+    for (key, clip, name, single, engine) in jobs:
         mpath = CLIPS / name / "motion.json"
         if not mpath.is_file():
             continue
@@ -150,8 +180,9 @@ def main() -> int:
               f"{f(r.get('side'))}{f(s.get('mean_height_gap_px'))}"
               f"{conf:>12}{calib:>10}{('1-view' if single else '2-view'):>8}")
     print("=" * 104)
-    print("the R2V row is NOT comparable on front or sync: one camera cannot see")
-    print("left-right motion, so its rig fit is 2.5D (X held at the rest pose).")
+    if any(single for (_k, _c, _n, single, _e) in jobs):
+        print("the R2V row is NOT comparable on front or sync: one camera cannot see")
+        print("left-right motion, so its rig fit is 2.5D (X held at the rest pose).")
     print("a FALLBACK calibration means the clip is not framed like the reference:")
     print("the reader still finds the joints, but the rig fit is indicative only.")
     print("=" * 104)
