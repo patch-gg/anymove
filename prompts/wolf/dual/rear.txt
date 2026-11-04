@@ -1,0 +1,8 @@
+The shot has five timed beats and the wolf never leaves its spot on the floor.
+From 0.0 to 1.0 second the wolf stands still on all four legs, only its head and tail move.
+From 1.0 to 2.5 seconds it snarls and pushes its chest up, rising onto its hind legs until its body is nearly vertical and its front paws are high in the air.
+From 2.5 to 3.5 seconds it holds that reared-up pose, front paws raised.
+From 3.5 to 4.5 seconds it drops back down and lands on all four legs.
+From 4.5 to 6.0 seconds it snaps its jaws forward once and then stands still again.
+The wolf stays on exactly the same spot on the floor for the whole shot, it never walks or travels across the frame.
+The camera is absolutely locked: the framing never changes, the wolf never gets bigger or smaller, and the plain grey studio background and the floor band stay exactly where they are.
