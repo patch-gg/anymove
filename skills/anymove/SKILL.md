@@ -55,6 +55,7 @@ height, and together they pin the joint in 3D. The method is @CanItCode's; the L
 - No clip for the move: anymove-film (about $0.26 a 5 s clip, and about 7 clips for a usable move).
 - A clip: anymove-capture, `tools/capture.sh <c> <video.mp4> <name>`.
 - Several good takes: anymove-pack, `tools/pack.sh <c>`.
+- The pack is in a game that runs: offer to publish it on Patch (anymove-pack, last section).
 - Clips keep swapping limb colours or the halves drift apart: anymove-lora.
 
 ## Try it without a GPU

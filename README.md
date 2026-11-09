@@ -18,8 +18,10 @@ The method is [@CanItCode](https://www.youtube.com/watch?v=AS92HYsEBqo)'s; the M
 [@Graalitoo](https://x.com/Graalitoo/status/2112548557576380659)'s idea. This repo is our working version of both, with
 the agent skills to run it.
 
-**Just want the creatures?** [Nine are ready in Patch's Assets](https://staging.patch.gg/create/toolbox/assets?source=anymove),
+**Just want the creatures?** [Nine are ready in Patch's Assets](https://patch.gg/create/toolbox/assets?source=anymove),
 with 4 to 7 moves each: T-rex, knight, horse, centaur, woman, ogre, ape, mech and scorpion.
+
+**Made a game with one?** [Publish it on Patch](#publish-it-on-patch).
 
 ## before you start.
 
@@ -142,6 +144,22 @@ tools/pack.sh <name>                           # after listing the keepers in pi
 
 `tools/make_mesh.py` makes the picture and the mesh on fal, if you don't have a model. The skills below walk an agent (or
 you) through each step, with the checks that tell a good capture from a bad one.
+
+## publish it on patch.
+
+Put your creature in a browser game or a mod and publish it on [Patch](https://patch.gg), where people play and remix
+games and mods. Install `pch`, Patch's command line, then restart your coding agent and ask it to publish the game: the
+install gives every agent on your PC Patch's tools. Or run it yourself:
+
+```bash
+npm i -g @patchgg/cli      # or: curl -fsSL https://patch.gg/install.sh | sh
+pch login
+pch init                   # in your game's folder; it says what's next
+pch publish
+```
+
+Publishing needs [Patch Desktop](https://docs.patch.gg/get-started) open on a Windows PC: it plays the game once to test
+it before it goes live. Check [the licences](#licence) of the models you used first.
 
 ## agent skills.
 
