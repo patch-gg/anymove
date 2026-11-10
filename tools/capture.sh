@@ -2,7 +2,8 @@
 # Per clip: read every joint in both views, fit the rig, and write the animation as a GLB with renders and a
 # side-by-side comparison of the AI clip and the rig.
 # tools/capture.sh CREATURE VIDEO.mp4 NAME [views=persp,side]     -> runs/CREATURE/clips/NAME/
-#   det.npz (joints read), overlay.mp4, motion.json (the fit), render/animation.glb, showcase.mp4
+#   det.npz (joints read), overlay.mp4, motion.json (the fit, with fingers when the rig has them), hands.jpg,
+#   render/animation.glb, showcase.mp4
 set -euo pipefail
 source "$(dirname "$0")/_env.sh"
 need_creature "${1:-}"
@@ -11,6 +12,25 @@ rig=assets/$c/rigged; out=runs/$c/clips/$name
 mkdir -p "$out"
 $PY -m mocap.detect "$video" "runs/$c/reader.pt" "runs/$c/ref/ref.png" "$out/det.npz" "$out/overlay.mp4" | tail -1
 $PY -m mocap.solve "$out/det.npz" "$rig/rig_info.json" "$out/motion.json" | grep -v "iter"
+# A rig with fingers (docs/hands.md): wrists and fingers from a hand model, which runs under its own Python.
+# PROMPT2RIG_HQ is the hq folder of a prompt2rig checkout (the model's weights, and its .venv unless HANDS_PY names
+# another Python). Without it the fingers keep their default pose: closed around what the hand holds, loosely curled
+# otherwise.
+if grep -q '"fingers"' "$rig/rig_info.json"; then
+  hands_py=${HANDS_PY:-}
+  if [ -z "$hands_py" ] && [ -n "${PROMPT2RIG_HQ:-}" ]; then
+    for p in "$PROMPT2RIG_HQ/.venv/bin/python" "$PROMPT2RIG_HQ/.venv/Scripts/python.exe"; do
+      if [ -x "$p" ]; then hands_py=$p; fi
+    done
+  fi
+  if [ -n "$hands_py" ]; then
+    "$hands_py" -m mocap.hands "$video" "$out/det.npz" "$rig/rig_info.json" "$out/motion.json" --sheet "$out/hands.jpg" \
+      ${HANDS_ARGS:-} 2>&1 | grep -E "^hands|Error|Traceback" \
+      || echo "the hands step did not finish: the fingers keep their default pose (docs/hands.md)" >&2
+  else
+    echo "fingers keep their default pose: set PROMPT2RIG_HQ to track them (docs/hands.md)"
+  fi
+fi
 # the 3/4 showcase camera: creature.json "camera", or one that frames this take (tools/frame_camera.py)
 read -r cam target lens < <(pyout tools/frame_camera.py --creature "assets/$c/creature.json" "$out/motion.json")
 run_blender -b -P blender/apply_motion.py -- "$rig/rigged.blend" "$rig/rig_info.json" "$out/motion.json" "$out/render" \
