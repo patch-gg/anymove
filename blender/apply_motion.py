@@ -10,8 +10,13 @@ blender -b -P blender/apply_motion.py -- rigged.blend rig_info.json motion.json 
   --springs fur.json         simulate the fur bones (blender/add_fur_bones.py) as damped springs
   --scale 0.75               render at this fraction of the layout size
   --ghost                    render the mesh as an x-ray ghost (workbench), for drawing a skeleton over
+  --follow knuckle_L         with the view "follow": a close camera that travels with this joint (a hand, a paw),
+                             --follow-size metres across (0.45), --follow-dir x,y,z from the joint to the camera,
+                             --follow-res pixels (540). Several joints: --follow a,b renders follow_a/ and follow_b/
 Always writes out_dir/joints.json, the world position of every joint per frame from Blender itself, and for every
 rendered view out_dir/cam_<view>.json, its pixel projection (common.camera_json).
+Fingers: motion.json "fingers" {"bones": [names], "euler": [T][bones][x, y, z]} (mocap/hands.py) is keyed as it is;
+finger bones it does not name hold their default pose (closed around what the hand holds, loosely curled otherwise).
 """
 import json, math, pathlib, sys
 
@@ -61,6 +66,18 @@ for t in range(T):
         pb = rig.pose.bones[n]
         pb.rotation_euler = motion["euler"][t][i]
         pb.keyframe_insert("rotation_euler", frame=t)
+if info.get("fingers"):
+    common.set_fingers(rig, common.default_fingers(info))
+    fm = motion.get("fingers")
+    if fm:
+        for t in range(T):
+            for i, n in enumerate(fm["bones"]):
+                pb = rig.pose.bones[n]
+                pb.rotation_euler = fm["euler"][t][i]
+                pb.keyframe_insert("rotation_euler", frame=t)
+    for b in info["fingers"]["bones"]:          # untracked fingers: one key, so the pose is in the exported clip
+        if not fm or b["name"] not in fm["bones"]:
+            rig.pose.bones[b["name"]].keyframe_insert("rotation_euler", frame=0)
 for fc in rig.animation_data.action.fcurves if hasattr(rig.animation_data.action, "fcurves") else []:
     for k in fc.keyframe_points:
         k.interpolation = "LINEAR"
@@ -121,11 +138,7 @@ joints = []
 for t in range(T):
     scene.frame_set(t)
     mw = rig.matrix_world
-    row = []
-    for kp in info["keypoints"]:
-        pb = rig.pose.bones[info["bones"][kp["bone"]]["name"]]
-        row.append(list(mw @ (pb.head if kp["end"] == "head" else pb.tail)))
-    joints.append(row)
+    joints.append([list(common.keypoint_world(rig, info, kp)) for kp in info["keypoints"]])
 json.dump({"names": [k["name"] for k in info["keypoints"]], "joints": joints, "fps": fps}, open(out / "joints.json", "w"))
 print("joints written", T, "frames")
 
@@ -165,6 +178,28 @@ if views:
         cam.data.clip_end = 200
         pw, ph = (int(x) for x in opt("--res", "1280x720").split("x"))
         cams["cam_persp"] = (cam, (pw, ph))
+    if "follow" in views:   # a close camera per followed joint, riding its (smoothed) path at a fixed angle
+        views.remove("follow")
+        J = np.array(joints)
+        kn = [k["name"] for k in info["keypoints"]]
+        fdir = Vector([float(x) for x in opt("--follow-dir", "-0.45,-0.85,0.3").split(",")]).normalized()
+        fres = int(opt("--follow-res", 540))
+        ker = np.exp(-0.5 * (np.arange(-9, 10) / 3.0) ** 2)
+        ker /= ker.sum()
+        for jn in opt("--follow", "").split(","):
+            path = J[:, kn.index(jn)]
+            path = np.stack([np.convolve(np.pad(path[:, i], 9, mode="edge"), ker, mode="valid") for i in range(3)], 1)
+            cam = bpy.data.objects.new(f"cam_follow_{jn}", bpy.data.cameras.new(f"cam_follow_{jn}"))
+            scene.collection.objects.link(cam)
+            cam.data.type = "ORTHO"
+            cam.data.ortho_scale = float(opt("--follow-size", 0.45))
+            cam.data.clip_end = 100
+            cam.rotation_euler = (-fdir).to_track_quat("-Z", "Y").to_euler()
+            for t in range(T):
+                cam.location = Vector(path[t].tolist()) + fdir * 4.0
+                cam.keyframe_insert("location", frame=t)
+            cams[f"cam_follow_{jn}"] = (cam, (fres, fres))
+            views.append(f"follow_{jn}")
     floor = None
     if "persp" in views and engine == "cycles":   # a shadow catcher, so the creature stands on the ground in 3/4 shots
         bpy.ops.mesh.primitive_plane_add(size=80, location=(0, 0, 0))

@@ -2,12 +2,16 @@
 
 blender -b -P blender/pack_glb.py -- rigged.blend rig_info.json out.glb Name=motion.json [Name=motion.json ...]
 The limb paint (a colour attribute mixed over the texture for the video model) is taken out first, so the GLB
-carries the creature's own texture.
+carries the creature's own texture. A rig with fingers gets them in every clip: as mocap/hands.py tracked them
+(motion.json "fingers"), or in their default pose (closed around what the hand holds, loosely curled otherwise).
 """
 import json, pathlib, sys
 
 import bpy
 from mathutils import Quaternion, Vector
+
+sys.path.insert(0, str(pathlib.Path(__file__).parent))
+import common  # noqa: E402
 
 args = sys.argv[sys.argv.index("--") + 1:]
 blend, info_path, out = args[:3]
@@ -36,6 +40,7 @@ for pb in rig.pose.bones:
 root = info["bones"][0]["name"]
 rig.pose.bones[root].rotation_mode = "QUATERNION"
 B = rig.data.bones[root].matrix_local.to_3x3()
+finger_default = common.default_fingers(info)
 rig.animation_data_create()
 fps = None
 for name, path in clips:
@@ -45,7 +50,16 @@ for name, path in clips:
     act = bpy.data.actions.new(name)
     rig.animation_data.action = act
     T = len(m["euler"])
+    fm = m.get("fingers") or {"bones": [], "euler": []}
+    for n, e in finger_default.items():  # fingers nothing tracked: one key, so the clip holds their pose
+        if n not in fm["bones"]:
+            rig.pose.bones[n].rotation_euler = e
+            rig.pose.bones[n].keyframe_insert("rotation_euler", frame=0)
     for t in range(T):
+        for i, n in enumerate(fm["bones"]):
+            pb = rig.pose.bones[n]
+            pb.rotation_euler = fm["euler"][t][i]
+            pb.keyframe_insert("rotation_euler", frame=t)
         pr = rig.pose.bones[root]
         pr.rotation_quaternion = Quaternion(m["root_quat"][t])
         pr.location = B.transposed() @ Vector(m["trans"][t])

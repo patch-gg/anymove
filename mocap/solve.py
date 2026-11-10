@@ -314,6 +314,9 @@ class Rig:
         self.lo = torch.tensor(lim[..., 0], device=dev)
         self.hi = torch.tensor(lim[..., 1], device=dev)
         self.kp = [(k["bone"], k["end"]) for k in info["keypoints"]]
+        # a keypoint can also ride on a bone at a fixed spot (a knuckle on a hand): its place in the bone's frame
+        self.kp_local = [torch.tensor(k["local"] + [1.0], dtype=torch.float64, device=dev) if k["end"] == "offset" else None
+                         for k in info["keypoints"]]
         self.kp_names = [k["name"] for k in info["keypoints"]]
         self.rest_kp = torch.tensor([k["rest"] for k in info["keypoints"]], dtype=torch.float64, device=dev)
 
@@ -335,9 +338,11 @@ class Rig:
             P[i] = M
         P = torch.stack(P, 1)
         joints = []
-        for b, end in self.kp:
+        for (b, end), local in zip(self.kp, self.kp_local):
             if end == "head":
                 joints.append(P[:, b, :3, 3])
+            elif end == "offset":
+                joints.append((P[:, b] @ local)[:, :3])
             else:
                 joints.append(P[:, b, :3, 1] * self.L[b] + P[:, b, :3, 3])
         return torch.stack(joints, 1), P

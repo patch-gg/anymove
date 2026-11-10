@@ -7,6 +7,7 @@ python tools/shape_clip.py MOTION.json OUT.json [--loop] [--root] [--skip N] [--
                 together), so planted feet stand still and the body travels; without it the clip stays in place
   --skip N      ignore the first N frames when looking for a loop (the move settling out of the reference pose)
   --start/--end trim a one-shot clip to these frames
+Fingers (motion.json "fingers", from mocap/hands.py) are trimmed and looped with the body.
 Prints the loop it chose and the seam check (pose jump at the wrap vs a typical frame-to-frame change).
 """
 import json, sys
@@ -105,6 +106,7 @@ def main():
     Q = np.array(m["root_quat"])
     tr = np.array(m["trans"])
     J = np.array(m["joints"])
+    Fg = np.array(m["fingers"]["euler"]) if m.get("fingers") else None
     g = np.array(m.get("contacts", {}).get("ground_velocity", [0, 0]) + [0.0])
     info = {}
     if "--root" in a:  # foot-locked root motion: the root travels exactly as the planted feet slip under it
@@ -123,6 +125,9 @@ def main():
         # spread the mismatch between the last frame and the first across the loop
         dE = E[-1] - E[0]
         E -= w[:, None, None] * dE[None]
+        if Fg is not None:
+            Fg = Fg[idx].copy()
+            Fg -= w[:, None, None] * (Fg[-1] - Fg[0])[None]
         disp = tr[-1] - tr[0]
         travel = np.zeros(3)
         if "--root" in a:  # keep the travel per cycle, but make the up-down wrap
@@ -152,10 +157,13 @@ def main():
             s0 = max(0, int(active[0]) - 6)
             s1 = min(T, int(active[-1]) + 18)
         E, Q, tr, J = E[s0:s1], Q[s0:s1], tr[s0:s1], J[s0:s1]
+        Fg = None if Fg is None else Fg[s0:s1]
         info.update({"start": s0, "end": s1})
     m2 = dict(m)
     m2.update({"euler": E.round(5).tolist(), "root_quat": Q.round(6).tolist(), "trans": tr.round(5).tolist(),
                "joints": J.round(4).tolist(), "shape": info})
+    if Fg is not None:
+        m2["fingers"] = {"bones": m["fingers"]["bones"], "euler": Fg.round(4).tolist()}
     json.dump(m2, open(out, "w"))
     print(json.dumps(info))
 

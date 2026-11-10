@@ -1,8 +1,10 @@
 """Render the rest pose from both layout cameras (RGBA), for the video model's first frame.
 
 blender -b -P blender/render_ref.py -- rigged.blend out_dir [samples]
+A rig with fingers (rig_info.json beside the .blend) shows them as a hand holds them: closed around what it holds,
+loosely curled otherwise.
 """
-import pathlib, sys
+import json, pathlib, sys
 
 import bpy
 
@@ -25,5 +27,8 @@ if start and "rest" not in args[2:]:
     for name, deg in start.items():
         pb = bpy.data.objects["rig"].pose.bones[name]
         pb.rotation_euler = Euler([math.radians(v) for v in deg], "XYZ")
+info_path = pathlib.Path(args[0]).parent / "rig_info.json"
+if info_path.exists():
+    common.set_fingers(bpy.data.objects["rig"], common.default_fingers(json.load(open(info_path))))
 common.studio(bpy.context.scene, samples=int(args[2]) if len(args) > 2 and args[2].isdigit() else 128)
 common.render_views(out, "ref")

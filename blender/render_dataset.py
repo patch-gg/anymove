@@ -4,6 +4,8 @@ blender -b -P blender/render_dataset.py -- rigged.blend rig_info.json out_dir st
 Each sample i writes out_dir/{i:05d}_front.png, _side.png (RGBA) and _meta.json (joints in metres and in
 full-size layout pixels for both views, plus the pose). About half the samples carry motion blur from a random
 velocity, the way a video model smears fast limbs. Lights, turn, position and airtime are random too.
+A rig with fingers gets a random hand in every sample, from open to a fist, so the reader learns that a knuckle
+stays where it is whatever the fingers do; a hand that holds something keeps its grip.
 """
 import json, math, pathlib, sys
 
@@ -56,6 +58,34 @@ def sample_pose(rng):
     return pose
 
 
+FING = info.get("fingers")
+FINGER_OF = {b["name"]: (b["finger"], b["k"]) for b in FING["bones"]} if FING else {}
+
+
+def sample_fingers(rng):
+    """{finger bone: Euler}: a held grip (a little loose or tight), or anything from an open hand to a fist."""
+    pose = {}
+    if not FING:
+        return pose
+    for hand in FING["hands"]:
+        hold, relaxed, fist = FING["hold"].get(hand), FING["relaxed"][hand], FING["fist"][hand]
+        if hold:
+            k = rng.uniform(0.9, 1.06)
+            pose.update({b: (e[0] * k, 0.0, 0.0) for b, e in hold.items()})
+            continue
+        r = rng.random()
+        u = 0.0 if r < 0.2 else 1.0 if r < 0.4 else rng.uniform(-0.25, 1.1)    # relaxed, fist, or anywhere between
+        spread = rng.normal(0, math.radians(5))
+        per = {}
+        for b in relaxed:
+            f, k = FINGER_OF[b]
+            per.setdefault(f, float(np.clip(u + rng.normal(0, 0.12), -0.3, 1.1)))
+            x = relaxed[b][0] + (fist[b][0] - relaxed[b][0]) * per[f]
+            z = spread * {"index": 1.0, "middle": 0.3, "ring": -0.4, "pinky": -1.0, "thumb": 0.0}[f] if k == 1 else 0.0
+            pose[b] = (max(x, math.radians(-8)), 0.0, z)
+    return pose
+
+
 def apply(pose, loc, yaw, frame):
     for name, a in pose.items():
         pb = rig.pose.bones[name]
@@ -81,12 +111,7 @@ def lowest_z():
 
 
 def joints_world():
-    mw = rig.matrix_world
-    pts = []
-    for kp in info["keypoints"]:
-        pb = rig.pose.bones[bones[kp["bone"]]]
-        pts.append(list(mw @ (pb.head if kp["end"] == "head" else pb.tail)))
-    return np.array(pts)
+    return np.array([list(common.keypoint_world(rig, info, kp)) for kp in info["keypoints"]])
 
 
 rng = np.random.default_rng(seed + start)
@@ -100,6 +125,8 @@ for i in range(start, start + count):
     for pb in rig.pose.bones:
         pb.location = (0, 0, 0)
     pose = sample_pose(rng)
+    fingers = sample_fingers(rng)
+    common.set_fingers(rig, fingers)
     r = rng.random()
     yaw = math.radians(rng.uniform(-30, 30) if r < 0.75 else rng.uniform(-70, 70) if r < 0.85 else 0)
     loc = Vector((rng.uniform(-0.08, 0.08), rng.uniform(-0.25, 0.25), 0))
@@ -140,6 +167,7 @@ for i in range(start, start + count):
         bpy.ops.render.render(write_still=True)
     meta = {"joints_world": jw.round(5).tolist(), "front_uv": front.round(3).tolist(), "side_uv": side.round(3).tolist(),
             "scale": scale, "blur": blur, "yaw": yaw, "root": list(loc),
-            "pose": {n: np.round(a, 5).tolist() for n, a in pose.items()}}
+            "pose": {n: np.round(a, 5).tolist() for n, a in pose.items()},
+            "fingers": {n: [round(float(x), 4) for x in e] for n, e in fingers.items()}}
     (out / f"{i:05d}_meta.json").write_text(json.dumps(meta))
     print("sample", i, flush=True)
