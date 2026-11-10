@@ -30,6 +30,11 @@ the clip), `motion.json` (the fit: root path and rotation, Euler angles per bone
    6 px, so big poses (sit, rear, slam) are found. Under a minute for 5 s (about 90 s for the dragon's roar on a CPU).
 4. **Export.** Blender keys the rig, writes the GLB and renders the views.
 
+A rig with fingers (`docs/hands.md`) gets one more step between the fit and the export: with `PROMPT2RIG_HQ` set to a
+prompt2rig checkout's `hq` folder, a hand model reads each wrist and every finger in both views and writes them into
+`motion.json`; `hands.jpg` shows what it saw. Without it the fingers keep their default pose. That model (WiLoR, with
+MANO) is non-commercial: say so before someone ships what it tracked.
+
 ## Is it good? Read the solve output
 
 The dragon's roar, for example:

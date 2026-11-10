@@ -145,6 +145,8 @@ tools/pack.sh <name>                           # after listing the keepers in pi
 `tools/make_mesh.py` makes the picture and the mesh on fal, if you don't have a model. The skills below walk an agent (or
 you) through each step, with the checks that tell a good capture from a bad one.
 
+A creature with hands can have fingers that move and a real grip on what it holds: [docs/hands.md](docs/hands.md).
+
 ## publish it on patch.
 
 Put your creature in a browser game or a mod and publish it on [Patch](https://patch.gg), where people play and remix
@@ -262,7 +264,8 @@ from [lobe-icons](https://github.com/lobehub/lobe-icons), MIT, and [Simple Icons
 MiniMax H3's open weights carry a community licence and hosted use on fal goes through fal's terms: check both before
 shipping what you make with them. What you make doesn't automatically get the licence of anything here, including the
 CC0 on Patch's nine creatures: its terms depend on the models you use and the keys you use them with. The wolf LoRA in the release (`lora-wolf-twocam-h3.safetensors`) is a LoRA on
-MiniMax H3, so MiniMax H3's community licence applies to it, not Apache-2.0.
+MiniMax H3, so MiniMax H3's community licence applies to it, not Apache-2.0. Finger tracking
+([docs/hands.md](docs/hands.md)) is optional and runs WiLoR and MANO from your own install; both are non-commercial.
 
 ## credits.
 

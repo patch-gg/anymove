@@ -57,6 +57,8 @@ Metres in the prepped mesh's frame: the creature faces -Y, its left is +X, Z is 
   Local X is the bending axis (world X for bones in the body's plane), Y runs along the bone (twist: small for spine
   and legs, ±8-20; arms can need ±40), Z swings sideways. Limits shape the training poses as well as the fit: too wide
   and the reader learns impossible poses, too narrow and it can't read the move.
+- Hands (optional): `points`, `fingers`, `props` and `hold` give a creature three bones per finger and a grip on what
+  it holds. The hand bone then ends at the middle knuckle, not the fingertips. `docs/hands.md` has the keys.
 
 Place joints from the grid views. After each edit:
 
