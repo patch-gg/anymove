@@ -25,10 +25,10 @@ it, every module falls back to the wolf's layout (420 + 860 px, 1.9 m of height 
 |---|---|---|
 | `assets/<c>/model.glb` | Tripo or any generator | the textured mesh |
 | `assets/<c>/creature.json` | you | `prep` (length_m, rotz_deg, axis), `layout`, `paint` (limb groups: colour + bones), `feet`, prompt words (`name`, `noun`, `describe`, `colour_code`, `count`, `flank`, `limbs`), the 3/4 showcase `camera`; optional: `contacts` (ground contact joints), `testpose`, `start_pose` (film A-pose bipeds with arms down), `rigid` (hard single-bone skinning), `fix_front_swaps` |
-| `assets/<c>/rig.json` | you | `joints` (metres, -Y forward, +X left), `bones` [name, head, tail, parent], `limits_deg` per bone or stem |
+| `assets/<c>/rig.json` | you | `joints` (metres, -Y forward, +X left), `bones` [name, head, tail, parent], `limits_deg` per bone or stem; optional, for hands ([hands.md](hands.md)): `points`, `fingers`, `props`, `hold` |
 | `assets/<c>/prep/static.blend` | `blender/prep_mesh.py` | the mesh at real size, facing -Y, on the ground |
 | `assets/<c>/rigged/rigged.blend` | `blender/build_rig.py` | armature, skinned mesh, limb paint as a colour attribute (`legpaint`) |
-| `assets/<c>/rigged/rig_info.json` | `blender/build_rig.py` | rest matrices, parents, lengths, limits, and the keypoints (which bone end each joint is) for the solver |
+| `assets/<c>/rigged/rig_info.json` | `blender/build_rig.py` | rest matrices, parents, lengths, limits, and the keypoints (which bone end each joint is, or where on a bone it rides) for the solver; `fingers` (finger bones, the grip, the default poses) when the rig has them |
 
 ## Stages
 
@@ -41,6 +41,7 @@ it, every module falls back to the wolf's layout (420 + 860 px, 1.9 m of height 
 | reader | `mocap/model.py`, `mocap/train.py` | dataset | `runs/<c>/reader.pt` (state dict, joint names, held-out error) |
 | read | `mocap/detect.py` | clip + reader + ref.png | `det.npz`: `front_uv`, `side_uv` (T x J x 2, layout px), `front_conf`, `side_conf`, `fps`, `names`, `calib` |
 | fit | `mocap/solve.py` | det.npz + rig_info.json | `motion.json`: `bones`, `trans`, `root_quat`, `euler` (T x B x 3), `joints` (T x J x 3 m), `reproj_px`, `sync` (incl. `paw_agreement`) |
+| hands | `mocap/hands.py` (rigs with fingers, under a hand model's Python: [hands.md](hands.md)) | clip + det.npz + rig_info.json + motion.json | `fingers` and `hands` in motion.json, the wrists turned to the measured palms, `hands.jpg` |
 | apply | `blender/apply_motion.py` | rigged.blend + motion.json | keyframed rig, `joints.json` (true joint positions from Blender), renders, `animation.glb` |
 | compare | `mocap/showcase.py` | clip + det.npz + renders | `showcase.mp4` |
 | score | `tools/score_takes.py` | every take's motion.json + det.npz | `runs/<c>/takes.csv` |
@@ -48,6 +49,7 @@ it, every module falls back to the wolf's layout (420 + 860 px, 1.9 m of height 
 | pack | `blender/pack_glb.py` | rigged.blend + shaped clips | `runs/<c>/pack/<c>.glb`, the limb paint taken out |
 | feet | `tools/locomotion.py` | root-motion loops | `runs/<c>/pack/locomotion.json` |
 | exam | `mocap/exam.py` | rig_info.json | a random motion, its two-camera video, and a per-joint error score in cm |
+| hands exam | `tools/hands_exam.py` | rig_info.json | a motion with known fingers, its two-camera video, and fingertip error in cm |
 | LoRA | `tools/build_lora_set.py`, `mocap/mirror.py`, `mocap/lora.py` | captured motions + prompts | training clips, the fal run, `lora.json` |
 
 ## Inside the reader

@@ -13,7 +13,7 @@ if [ "${2:-}" = preview ]; then
   exit 0
 fi
 run_blender -b -P blender/build_rig.py -- "$a/prep/static.blend" "$a/rig.json" "$a/rigged" \
-  | grep -E "merged|without weights|smoothed|painted|saved|Error" || true
+  | grep -E "merged|without weights|smoothed|finger weights|^prop |closed around|painted|saved|Error" || true
 run_blender -b -P blender/render_ref.py -- "$a/rigged/rigged.blend" "runs/$1/ref" | grep -E "Error" || true
 $PY tools/compose_ref.py "runs/$1/ref"
 echo "test pose: $a/rigged/testpose_front.png, testpose_side.png"

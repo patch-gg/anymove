@@ -61,6 +61,78 @@ def load_rig(path):
     return joints, bones, limits
 
 
+def load_rig_extras(path):
+    """The optional parts of rig.json, for creatures with hands and props (docs/hands.md):
+    "points"  {joint: bone}: a joint the reader reads that rides on a bone without being one of its ends (a knuckle)
+    "fingers" {hand bone: {"palm_out": [x, y, z], "joints": {finger: four points, base to tip}, "radii": {bone: m}}}:
+              three bones per finger under the hand. The reader never reads them; a hand tracker poses them.
+              "radii" is optional (8 mm without it).
+    "props"   {bone: "points.npy"}: a prop's bone and the vertices that are the prop (positions, beside rig.json).
+              They follow that bone alone and nothing else does, so a sword never bends with the hand around it.
+    "hold"    {hand bone: {"from": p, "to": p, "radius": m}}: the handle that hand is closed around."""
+    rig = json.load(open(path))
+    ex = {k: dict(rig.get(k, {})) for k in ("points", "fingers", "props", "hold")}
+    # like joints and bones, a left point or hand is mirrored to the right unless the right one is given
+    for j, bone in list(ex["points"].items()):
+        if j.endswith("_L") and mirror(j) not in ex["points"]:
+            ex["points"][mirror(j)] = mirror(bone)
+    for hand, spec in list(ex["fingers"].items()):
+        if hand.endswith("_L") and mirror(hand) not in ex["fingers"]:
+            ex["fingers"][mirror(hand)] = {"palm_out": [-spec["palm_out"][0], *spec["palm_out"][1:]], "radii": spec.get("radii", {}),
+                                           "joints": {f: [[-q[0], q[1], q[2]] for q in pts] for f, pts in spec["joints"].items()}}
+    for spec in ex["fingers"].values():
+        spec.setdefault("radii", {})
+    return ex
+
+
+FINGERS = ("thumb", "index", "middle", "ring", "pinky")
+# how far each finger bone folds, base to tip, in degrees about its own X axis (positive folds toward the palm)
+FOLD = {"relaxed": {"thumb": (6, 10, 12), "other": (16, 24, 16)},
+        "fist": {"thumb": (22, 34, 48), "other": (82, 96, 62)},
+        "max": {"thumb": (45, 60, 80), "other": (95, 110, 80)}}
+
+
+def finger_bone_names(hand):
+    """thumb1_L ... pinky3_L for hand_L, base to tip per finger."""
+    side = hand[hand.rindex("_"):] if "_" in hand else ""
+    return {f: [f"{f}{k}{side}" for k in (1, 2, 3)] for f in FINGERS}
+
+
+def finger_pose(hand, kind):
+    """{bone: (x, y, z) Euler radians} for one hand: "relaxed" or "fist"."""
+    out = {}
+    for f, names in finger_bone_names(hand).items():
+        for name, deg in zip(names, FOLD[kind]["thumb" if f == "thumb" else "other"]):
+            out[name] = (math.radians(deg), 0.0, 0.0)
+    return out
+
+
+def default_fingers(info):
+    """The pose fingers take when nothing tracks them: closed around what the hand holds, loosely curled otherwise."""
+    f = info.get("fingers")
+    if not f:
+        return {}
+    pose = {}
+    for hand in f["hands"]:
+        pose.update(f["hold"].get(hand) or f["relaxed"][hand])
+    return pose
+
+
+def set_fingers(rig, pose):
+    for name, e in pose.items():
+        pb = rig.pose.bones[name]
+        pb.rotation_mode = "XYZ"
+        pb.rotation_euler = e
+
+
+def keypoint_world(rig, info, kp):
+    """A keypoint's world position from the posed rig: a bone's head, its tail, or a fixed spot that rides on it."""
+    pb = rig.pose.bones[info["bones"][kp["bone"]]["name"]]
+    if kp["end"] == "offset":
+        return rig.matrix_world @ (pb.matrix @ Vector(kp["local"]))
+    return rig.matrix_world @ (pb.head if kp["end"] == "head" else pb.tail)
+
+
 def srgb_to_linear(hexcol):
     c = np.array([int(hexcol[i:i + 2], 16) / 255 for i in (1, 3, 5)])
     return np.where(c <= 0.04045, c / 12.92, ((c + 0.055) / 1.055) ** 2.4)
@@ -101,9 +173,12 @@ def paint_legs(body, threshold=0.55):
     print("painted vertices", {leg: int((w[leg] > threshold).sum()) for leg in w})
 
 
-def write_rig_info(arm, joints, bones, limits, path):
-    """Everything the solver needs to redo Blender's forward kinematics, plus which bone end each joint sits on."""
+def write_rig_info(arm, joints, bones, limits, path, extras=None, fingers=None):
+    """Everything the solver needs to redo Blender's forward kinematics, plus where each joint sits: a bone's head or
+    tail, or (rig.json "points") a fixed spot on a bone. `fingers` (build_rig) is written as is: the finger bones and
+    their poses, which the solver leaves alone."""
     order = [b[0] for b in bones]
+    points = (extras or {}).get("points", {})
     info = {"bones": [], "keypoints": [], "layout": LAYOUT}
     for name, h, t, parent in bones:
         bb = arm.data.bones[name]
@@ -113,7 +188,16 @@ def write_rig_info(arm, joints, bones, limits, path):
     for j in joints:
         src = next(((i, "head") for i, b in enumerate(bones) if b[1] == j), None) or \
               next(((i, "tail") for i, b in enumerate(bones) if b[2] == j), None)
+        if src is None:
+            if points.get(j) not in order:
+                raise SystemExit(f'rig.json: joint "{j}" is not an end of any bone; name the bone it rides on in "points"')
+            i = order.index(points[j])
+            local = arm.data.bones[points[j]].matrix_local.inverted() @ Vector(joints[j])
+            info["keypoints"].append({"name": j, "bone": i, "end": "offset", "local": list(local), "rest": joints[j]})
+            continue
         info["keypoints"].append({"name": j, "bone": src[0], "end": src[1], "rest": joints[j]})
+    if fingers:
+        info["fingers"] = fingers
     json.dump(info, open(path, "w"), indent=1)
 
 
