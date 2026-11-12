@@ -18,6 +18,9 @@ The method is [@CanItCode](https://www.youtube.com/watch?v=AS92HYsEBqo)'s; the M
 [@Graalitoo](https://x.com/Graalitoo/status/2112548557576380659)'s idea. This repo is our working version of both, with
 the agent skills to run it.
 
+**Want to see it first?** [Try anymove on Patch](https://patch.gg/patch/anymove): scrub a real capture and turn the
+finished animation in 3D.
+
 **Just want the creatures?** [Nine are ready in Patch's Assets](https://patch.gg/create/toolbox/assets?source=anymove),
 with 4 to 7 moves each: T-rex, knight, horse, centaur, woman, ogre, ape, mech and scorpion.
 
