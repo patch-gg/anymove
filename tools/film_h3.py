@@ -97,10 +97,22 @@ DEFAULT_AUDIO_VAE = "minimax_h3_audio_vae_fp32.safetensors"
 #   pika-flex-r2v the reference-to-video route: a different BASE checkpoint
 #                 (ref2va), a different adapter, and a reference image that
 #                 conditions the model instead of becoming the first frame.
+#   hyperflow     Video Rebirth's HyperFlow H3 Flash: a DIFFERENT DENOISER on
+#                 the fl2va route. The 6-step schedule is baked into the
+#                 checkpoint, so there is NO turbo LoRA; the checkpoint is
+#                 read by the pack's own HyperFlowLoader (the stock
+#                 UNETLoader cannot read its two-time embedder or its
+#                 factorized linears), and the schedule comes from
+#                 HyperFlowSigmas rather than BasicScheduler. The sampler is
+#                 euler and the guider is CFG-free, which is what the
+#                 checkpoint's baked-in guidance expects.
 #
 # The Pika adapters are LoRA - they belong in models/loras/ and load through
 # LoraLoaderModelOnly. They are native-only: ComfyUI-GGUF's loader does not
 # take them, and the GGUF route is the base engine's business.
+#
+# HyperFlow is native-only for the same reason in a different form: the pack
+# ships a HyperFlowGGUFLoader, but the GGUF route is not what we film on.
 PIKA_SIGMAS = "1.0, 0.972973, 0.923077, 0.8, 0.571429, 0.333333, 0.0"
 
 ENGINES = {
@@ -139,6 +151,25 @@ ENGINES = {
         "sigmas": PIKA_SIGMAS,
         "prompt_style": "subject_definitions",
         "route": "reference",
+    },
+    "hyperflow": {
+        "node": "MiniMaxH3ImageToVideo",
+        "unet": "minimax_h3_fl2va_hyperflow_flash_14b-int8_convrot.safetensors",
+        # The pack's own loader. UNETLoader cannot read this checkpoint.
+        "loader_node": "HyperFlowLoader",
+        # The schedule lives in the checkpoint, so there is no BasicScheduler.
+        "schedule_node": "HyperFlowSigmas",
+        # NO turbo LoRA: the 6-step schedule is baked into the weights.
+        "lora": None,
+        # The SAME fp16 video VAE the base engine uses, so the read compares the
+        # denoiser and not the decoder.
+        "video_vae": "minimax_h3_video_vae_fp16.safetensors",
+        "sampler": "euler",
+        "scheduler": None,
+        "steps": 6,
+        "sigmas": None,
+        "prompt_style": "plain",
+        "route": "first_frame",
     },
 }
 
@@ -260,7 +291,13 @@ def subject_definitions_prompt(subject: str, role: str, features: str,
 
 def build_graph(args, image_name: str) -> dict:
     g: dict = {}
-    if args.loader == "native":
+    if getattr(args, "loader_node", None):
+        # HyperFlow brings its own loader. The stock UNETLoader cannot read this
+        # checkpoint: it has a two-time embedder and factorized linears, and the
+        # pack's reader is what understands them.
+        g["10"] = {"class_type": args.loader_node,
+                   "inputs": {"unet_name": args.unet}}
+    elif args.loader == "native":
         g["10"] = {"class_type": "UNETLoader",
                    "inputs": {"unet_name": args.unet, "weight_dtype": args.weight_dtype}}
     else:
@@ -317,7 +354,12 @@ def build_graph(args, image_name: str) -> dict:
     g["17"] = {"class_type": "BasicGuider",
                "inputs": {"model": model_ref, "conditioning": ["16", 0]}}
     g["18"] = {"class_type": "RandomNoise", "inputs": {"noise_seed": args.seed}}
-    if args.sigmas:
+    if getattr(args, "schedule_node", None):
+        # HyperFlow's own schedule: the knot list comes from the checkpoint, so
+        # the node is handed the model and a step count (4, 6 or 8).
+        g["19"] = {"class_type": args.schedule_node,
+                   "inputs": {"model": model_ref, "steps": args.steps}}
+    elif args.sigmas:
         # Pika H3 Flex: a FIXED six-step knot schedule. A step count would be
         # meaningless here - the knots are the schedule.
         g["19"] = {"class_type": "ManualSigmas", "inputs": {"sigmas": args.sigmas}}
@@ -386,7 +428,9 @@ def main() -> int:
                          "video VAE + sampler + schedule + prompt shape. "
                          "base = stock MiniMax-H3 (what we have been filming). "
                          "pika-flex = Pika H3 Flex on the fl2va base. "
-                         "pika-flex-r2v = Pika H3 Flex reference-to-video on ref2va.")
+                         "pika-flex-r2v = Pika H3 Flex reference-to-video on ref2va. "
+                         "hyperflow = Video Rebirth's HyperFlow H3 Flash on the fl2va "
+                         "route: its own loader, its own schedule, no turbo LoRA.")
     ap.add_argument("--loader", default="native", choices=["gguf", "native"],
                     help="native = ComfyUI UNETLoader with the int8_convrot checkpoint "
                          "(fast: ~3.8 s/step measured); "
@@ -465,7 +509,38 @@ def main() -> int:
     args.node = eng["node"]
     args.route = eng["route"]
     args.prompt_style = eng["prompt_style"]
+    args.loader_node = eng.get("loader_node")
+    args.schedule_node = eng.get("schedule_node")
     args.is_pika = args.engine.startswith("pika")
+    args.is_hyperflow = args.engine.startswith("hyperflow")
+
+    if args.is_hyperflow:
+        # HyperFlow's checkpoint is read by the pack's own loader and carries
+        # its schedule in the weights. The GGUF loader cannot read a
+        # safetensors file, so the GGUF route is switched off rather than
+        # left to fail at load time.
+        if args.loader == "gguf":
+            print("WARNING: --engine hyperflow is native-only "
+                  "(the GGUF loader cannot read the INT8 convrot safetensors); "
+                  "switching to the native loader.", file=sys.stderr)
+            args.loader = "native"
+        # An adapter on top of HyperFlow would be a DIFFERENT engine, not a
+        # tuned one: the schedule is already baked into the checkpoint, so the
+        # turbo LoRA has no schedule left to accelerate, and the VBVR adapter
+        # was qualified against the base route's turbo chain, not this one.
+        if args.lora:
+            print("ERROR: --lora is refused for --engine hyperflow. The "
+                  "HyperFlow checkpoint has its 6-step schedule baked in and "
+                  "ships without a turbo LoRA; adding an adapter would make "
+                  "it a different engine, not a cheaper one.", file=sys.stderr)
+            return 1
+        if args.extra_lora:
+            print("ERROR: --extra-lora is refused for --engine hyperflow. The "
+                  "extra adapter was qualified against the base route's turbo "
+                  "chain and was never measured on the HyperFlow checkpoint, so "
+                  "stacking it here would film an unmeasured engine.",
+                  file=sys.stderr)
+            return 1
 
     if args.is_pika:
         # The Pika adapters are safetensors LoRAs. ComfyUI-GGUF's loader does not

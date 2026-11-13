@@ -88,9 +88,32 @@ TODAY_JOBS = [
     ("pounce", VIDEOS / "pounce" / "s1" / "h3-vbvr-today-pounce.mp4", "h3-vbvr-today-pounce", False, "base+VBVR"),
 ]
 
+#: The HyperFlow set (2026-11-11): the base route and the HyperFlow route
+#: filmed BACK TO BACK in one session on the four matched moves - same
+#: reference, same prompt file, same beat script, same seed, same seconds,
+#: same dimensions, same text encoder, same video VAE. The only variable is
+#: the denoiser: the stock pruned int8 checkpoint with the turbo LoRA against
+#: the HyperFlow H3 Flash checkpoint with its own loader and its baked-in
+#: 6-step schedule.
+#:
+#: It is a separate set from "today" because "today" was filmed on 2026-11-05,
+#: and a timing or read table built across days is not a controlled
+#: comparison - the machine state changes between days.
+HF11_JOBS = [
+    ("shake", VIDEOS / "shake" / "s1" / "h3-base-hf11-shake.mp4", "h3-base-hf11-shake", False, "base H3"),
+    ("shake", VIDEOS / "shake" / "s1" / "h3-hyperflow-hf11-shake.mp4", "h3-hyperflow-hf11-shake", False, "HyperFlow"),
+    ("gallop", VIDEOS / "gallop" / "s1" / "h3-base-hf11-gallop.mp4", "h3-base-hf11-gallop", False, "base H3"),
+    ("gallop", VIDEOS / "gallop" / "s1" / "h3-hyperflow-hf11-gallop.mp4", "h3-hyperflow-hf11-gallop", False, "HyperFlow"),
+    ("howl", VIDEOS / "howl" / "s1" / "h3-base-hf11-howl.mp4", "h3-base-hf11-howl", False, "base H3"),
+    ("howl", VIDEOS / "howl" / "s1" / "h3-hyperflow-hf11-howl.mp4", "h3-hyperflow-hf11-howl", False, "HyperFlow"),
+    ("pounce", VIDEOS / "pounce" / "s1" / "h3-base-hf11-pounce.mp4", "h3-base-hf11-pounce", False, "base H3"),
+    ("pounce", VIDEOS / "pounce" / "s1" / "h3-hyperflow-hf11-pounce.mp4", "h3-hyperflow-hf11-pounce", False, "HyperFlow"),
+]
+
 #: Which set to read. "published" is the three-day set the docs quote;
 #: "today" is the one-day controlled re-film of the same twelve clips.
-SETS = {"published": lambda: PUBLISHED_JOBS, "today": lambda: TODAY_JOBS}
+SETS = {"published": lambda: PUBLISHED_JOBS, "today": lambda: TODAY_JOBS,
+        "hf11": lambda: HF11_JOBS}
 
 
 def run(cmd: list[str], label: str) -> int:
@@ -132,9 +155,12 @@ def main() -> int:
                     help="where the joint reader runs. The reader needs ~2.4 GB of "
                          "VRAM; on this box the other ComfyUI lane holds the card, "
                          "so cpu is the contention-free default.")
+    ap.add_argument("--engine", default="", help="only read the clips of this engine")
     args = ap.parse_args()
     wanted = {k.strip() for k in args.only.split(",") if k.strip()}
     jobs = SETS[args.set]()
+    if args.engine.strip():
+        jobs = [j for j in jobs if j[4] == args.engine.strip()]
 
     results = []
     for key, clip, name, single, _engine in jobs:
