@@ -9,6 +9,9 @@
 
 **@patch_gg** · dragon, giant spider, fire demon, wolf · about $3 for a usable move, all in.
 
+anymove is part of [Patch (patch.gg)](https://patch.gg), where people and their coding agents make browser games and
+mods, and publish them for anyone to play.
+
 anymove turns one AI video into an animation for any rigged creature, wings, tails and eight legs included. A video
 model films the creature from two cameras in one frame, front on the left and side on the right. A joint reader
 trained on that one creature finds every joint in both views. A joint sits at the same height in both, so the pair
@@ -25,6 +28,8 @@ finished animation in 3D.
 with 4 to 7 moves each: T-rex, knight, horse, centaur, woman, ogre, ape, mech and scorpion.
 
 **Made a game with one?** [Publish it on Patch](#publish-it-on-patch).
+
+**Working with a coding agent?** [Give it Patch's tools](#use-it-from-your-coding-agent).
 
 ## before you start.
 
@@ -163,6 +168,22 @@ pch publish
 
 Publishing needs [Patch Desktop](https://docs.patch.gg/get-started) open on a Windows PC: it plays the game once to test
 it before it goes live. Check [the licences](#licence) of the models you used first.
+
+## use it from your coding agent.
+
+Patch's MCP server gives your coding agent Patch's tools: it can find anymove and Patch's other open repos, pull the
+nine creatures from Patch's asset library, and build, test and publish a game on Patch. `pch`, Patch's command line,
+sets it up:
+
+```bash
+curl -fsSL https://patch.gg/install.sh | sh    # installs pch; then open a new terminal
+pch login
+pch agent install                              # gives Claude Code, Codex and Cursor Patch's tools
+```
+
+The installer runs `pch agent install` for you; run it again for an agent you add later, then restart the agent. An app
+that adds MCP servers by address connects to `https://patch.gg/api/mcp` and signs in with your Patch account.
+[Patch's MCP server](https://docs.patch.gg/mcp-server) lists its tools.
 
 ## agent skills.
 
