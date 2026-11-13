@@ -9,6 +9,10 @@ the two halves disagree, and the time lag between them that agrees best.
 The fit runs Blender's forward kinematics in torch (pose = parent pose x rest offset x Euler XYZ), with the pelvis
 free to turn and move, every other bone limited to its range, and minimises the confidence-weighted distance between
 the rig's projected joints and the readings in both views, plus smoothness and a small pull toward the rest pose.
+
+A detection made with `mocap.detect --single-view` (one camera, not two) is fitted in 2.5D: the side view gives Y
+and Z, and X - which one camera cannot see - is held at the rest pose. The swap, sync and paw-agreement tests need
+two views and are skipped, and the front number is the rig's deviation from rest, NOT a reading accuracy.
 """
 import json, sys
 
@@ -591,11 +595,72 @@ def kv(flag):
 
 
 def main():
-    det_path, info_path, out = sys.argv[1:4]
+    # A flag's VALUE must not be mistaken for a positional argument, so the
+    # flag and its value are lifted out before the positionals are read.
+    argv = list(sys.argv[1:])
+    # The rig fit can run on the GPU, but the GPU is a shared resource on this
+    # box and the other ComfyUI lane holds most of the card. `--device cpu`
+    # keeps the whole read off the VRAM entirely.
+    dev = "cuda" if torch.cuda.is_available() else "cpu"
+    if "--device" in argv:
+        i = argv.index("--device")
+        if i + 1 < len(argv):
+            dev = argv[i + 1]
+            argv = argv[:i] + argv[i + 2:]
+    if dev not in ("cuda", "cpu"):
+        raise SystemExit(f"--device must be cuda or cpu, not {dev!r}")
+    # The iteration count is the fit's budget. It does not change WHAT is
+    # reported - the contract, the keys, the flags - only how well the rig is
+    # fitted. A guard that checks the contract does not need the full budget.
+    iters = 1500
+    if "--iters" in argv:
+        i = argv.index("--iters")
+        if i + 1 < len(argv):
+            iters = int(argv[i + 1])
+            argv = argv[:i] + argv[i + 2:]
+    det_path, info_path, out = argv[:3]
+    print(f"fit device: {dev}")
+    print(f"fit iterations: {iters}")
     raw = np.load(det_path)
+    single = bool(raw["single_view"]) if "single_view" in raw.files else False
+    # Whether the read's calibration actually locked onto the reference. A False
+    # here means the clip is not framed like the reference and the rig fit below
+    # is INDICATIVE, not contract-grade - it must travel with the result.
+    calib_converged = bool(raw["calib_converged"]) if "calib_converged" in raw.files else True
+    if not calib_converged:
+        print("WARNING: the read's calibration fell back to a plain stretch - "
+              "this fit is indicative, not contract-grade")
     d = {k: raw[k].copy() for k in ("front_uv", "side_uv", "front_conf", "side_conf")}
     info = json.load(open(info_path))
     names = [k["name"] for k in info["keypoints"]]
+    if single:
+        # ONE camera, not two. A side view gives Y and Z; the X axis (left-right)
+        # is not observable from a single camera, so it is HELD AT THE REST POSE
+        # and the front observation is the rest projection. That is an ASSUMPTION,
+        # not a measurement - so the front number below is the rig's deviation
+        # from rest, not a reading accuracy against a real front camera.
+        rest = Rig(info).rest_kp.numpy()
+        v = layout.H / 2 - (rest[:, 2] - layout.Z_CENTER) / layout.M_PER_PX
+        front_rest = np.stack([layout.W_FRONT / 2 + rest[:, 0] / layout.M_PER_PX, v], -1)
+        T = len(d["side_uv"])
+        d["front_uv"] = np.tile(front_rest, (T, 1, 1))
+        d["front_conf"] = np.ones_like(d["side_conf"])
+        print("SINGLE VIEW: fitting the rig in 2.5D - Y and Z from the side view, "
+              "X held at the rest pose (one camera cannot see left-right motion)")
+        res = fit(d, info, iters=iters, dev=dev)
+        rp = res["reproj_px"]
+        print("reprojection error px: side", round(rp["side"], 2),
+              "| front rest-deviation", round(rp["front"], 2))
+        motion = {"fps": float(raw["fps"]), "bones": res["bones"], "trans": res["trans"].round(5).tolist(),
+                  "root_quat": to_quat(res["root_rotmat"]).round(6).tolist(), "euler": res["euler"].round(5).tolist(),
+                  "joints": res["joints"].round(4).tolist(), "joint_names": res["joint_names"],
+                  "reproj_px": {"side": rp["side"], "front_rest_deviation_px": rp["front"],
+                                "front_x_only": rp["front_x_only"]},
+                  "sync": None, "swaps": {}, "single_view": True,
+                  "calib_converged": calib_converged}
+        json.dump(motion, open(out, "w"))
+        print("saved", out)
+        return
     before = sync_report(d)
     paws = paw_agreement(d, names)
     print("paw height agreement between views:", {k: (None if v is None else round(v, 2)) for k, v in paws.items()})
@@ -626,7 +691,7 @@ def main():
     sync["paw_agreement"] = paws
     sync["front_shift_frames"] = None if shift is None else shift.round(2).tolist()
     fhw = float(sys.argv[sys.argv.index("--front-height-weight") + 1]) if "--front-height-weight" in sys.argv else 0.25
-    res = fit(d, info, dev="cuda" if torch.cuda.is_available() else "cpu", fps=float(raw["fps"]),
+    res = fit(d, info, iters=iters, dev=dev, fps=float(raw["fps"]),
               plant="--no-plant" not in sys.argv, front_height_weight=fhw,
               far_side_weight=float(sys.argv[sys.argv.index("--far-side-weight") + 1]) if "--far-side-weight" in sys.argv else 1.0,
               joint_weight=kv("--joint-weight"), joint_sigma=kv("--joint-sigma"),
@@ -637,8 +702,9 @@ def main():
     motion = {"fps": float(raw["fps"]), "bones": res["bones"], "trans": res["trans"].round(5).tolist(),
               "root_quat": to_quat(res["root_rotmat"]).round(6).tolist(), "euler": res["euler"].round(5).tolist(),
               "joints": res["joints"].round(4).tolist(), "joint_names": res["joint_names"],
-              "reproj_px": res["reproj_px"], "reproj_confident_px": res["reproj_confident_px"], "sync": sync, "swaps": swapped, "swap_suspect_frames": suspect,
-              "contacts": res["contacts"]}
+              "reproj_px": res["reproj_px"], "reproj_confident_px": res["reproj_confident_px"],
+              "sync": sync, "swaps": swapped, "swap_suspect_frames": suspect,
+              "contacts": res["contacts"], "calib_converged": calib_converged}
     json.dump(motion, open(out, "w"))
     print("saved", out)
 
