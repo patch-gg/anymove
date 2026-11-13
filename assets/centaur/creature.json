@@ -1,0 +1,166 @@
+{
+ "name": "centaur",
+ "prep": {
+  "length_m": 2.4,
+  "rotz_deg": -90,
+  "axis": "z"
+ },
+ "noun": "centaur",
+ "layout": {
+  "W_FRONT": 640,
+  "W_SIDE": 640,
+  "M_PER_PX": 0.0048,
+  "GROUND_V": 640
+ },
+ "paint": {
+  "FL": {
+   "color": "#F53CD1",
+   "bones": [
+    "fupper_L",
+    "fforearm_L",
+    "metacarpus_L",
+    "fpaw_L"
+   ]
+  },
+  "FR": {
+   "color": "#2F6BFF",
+   "bones": [
+    "fupper_R",
+    "fforearm_R",
+    "metacarpus_R",
+    "fpaw_R"
+   ]
+  },
+  "HL": {
+   "color": "#FFD21F",
+   "bones": [
+    "thigh_L",
+    "shin_L",
+    "metatarsus_L",
+    "hpaw_L"
+   ]
+  },
+  "HR": {
+   "color": "#19D3E0",
+   "bones": [
+    "thigh_R",
+    "shin_R",
+    "metatarsus_R",
+    "hpaw_R"
+   ]
+  },
+  "AL": {
+   "color": "#FF7A1A",
+   "bones": [
+    "upperarm_L",
+    "forearm_L",
+    "hand_L"
+   ]
+  },
+  "AR": {
+   "color": "#2BD94A",
+   "bones": [
+    "upperarm_R",
+    "forearm_R",
+    "hand_R"
+   ]
+  }
+ },
+ "feet": [
+  "fpaw_L",
+  "fpaw_R",
+  "hpaw_L",
+  "hpaw_R"
+ ],
+ "contacts": [
+  "ftoe_L",
+  "ftoe_R",
+  "htoe_L",
+  "htoe_R",
+  "fpaw_L",
+  "fpaw_R",
+  "hpaw_L",
+  "hpaw_R"
+ ],
+ "describe": "a centaur: a muscular chestnut horse body with four legs and a short tail, joined at the withers to the bare-chested upper body of a bearded man with short dark hair",
+ "colour_code": "front-left horse leg pink, front-right horse leg blue, hind-left horse leg yellow, hind-right horse leg cyan, left human arm orange, right human arm green",
+ "count": "Exactly four horse legs, two human arms, one human head, one tail. No weapon, no bow, no armour, no rider.",
+ "flank": "flank",
+ "limbs": "limbs",
+ "testpose": {
+  "fupper_L": [
+   -40,
+   0,
+   0
+  ],
+  "fforearm_L": [
+   -90,
+   0,
+   0
+  ],
+  "metacarpus_L": [
+   100,
+   0,
+   0
+  ],
+  "thigh_R": [
+   30,
+   0,
+   0
+  ],
+  "shin_R": [
+   60,
+   0,
+   0
+  ],
+  "metatarsus_R": [
+   -70,
+   0,
+   0
+  ],
+  "upperarm_L": [
+   -70,
+   0,
+   0
+  ],
+  "forearm_L": [
+   -100,
+   0,
+   0
+  ],
+  "waist": [
+   20,
+   0,
+   20
+  ],
+  "upperarm_R": [
+   0,
+   0,
+   -40
+  ]
+ },
+ "start_pose": {
+  "upperarm_L": [
+   0,
+   0,
+   42
+  ],
+  "upperarm_R": [
+   0,
+   0,
+   -42
+  ],
+  "forearm_L": [
+   -12,
+   0,
+   0
+  ],
+  "forearm_R": [
+   -12,
+   0,
+   0
+  ]
+ },
+ "fix_front_swaps": true,
+  "camera": {"cam": "-9.645,-7.500,4.617", "target": "-0.007,-0.333,1.651", "lens": 40}
+}

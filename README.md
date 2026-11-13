@@ -7,8 +7,7 @@
 
 <img alt="Six panels: a dragon, a giant spider, a fire demon and a wolf, all moving; then an AI video shows the dragon from the front and the side at once; every joint is found in both views; the two views stand up as walls and pin each joint in 3D; the rig lands on the points; a fire demon, a spider and a wolf move the same way." src="docs/anymove.gif" width="800">
 
-**@patch_gg** · dragon, giant spider, fire demon, wolf · one AI clip per move, $0.26 each, read and fitted in under
-a minute.
+**@patch_gg** · dragon, giant spider, fire demon, wolf · about $3 for a usable move, all in.
 
 anymove turns one AI video into an animation for any rigged creature, wings, tails and eight legs included. A video
 model films the creature from two cameras in one frame, front on the left and side on the right. A joint reader
@@ -18,6 +17,43 @@ pins it in 3D, and the rig is fitted to those joints frame by frame and exported
 The method is [@CanItCode](https://www.youtube.com/watch?v=AS92HYsEBqo)'s; the MiniMax H3 LoRA step is
 [@Graalitoo](https://x.com/Graalitoo/status/2112548557576380659)'s idea. This repo is our working version of both, with
 the agent skills to run it.
+
+**Want to see it first?** [Try anymove on Patch](https://patch.gg/patch/anymove): scrub a real capture and turn the
+finished animation in 3D.
+
+**Just want the creatures?** [Nine are ready in Patch's Assets](https://patch.gg/create/toolbox/assets?source=anymove),
+with 4 to 7 moves each: T-rex, knight, horse, centaur, woman, ogre, ape, mech and scorpion.
+
+**Made a game with one?** [Publish it on Patch](#publish-it-on-patch).
+
+## before you start.
+
+- **You need:** an NVIDIA card (12 GB to train a reader, 24 GB is safer), Blender 5.x, Python 3.11 and a
+  [fal](https://fal.ai) key. Without the card it doesn't run, and there's no cloud version.
+- **It costs about $3 for a usable move, all in,** and about $17 and a couple of hours for a new creature with about 5
+  moves. [The numbers are below](#what-it-costs).
+- **Most clips don't make it.** A move took about 7 clips on average, and 58% of captured clips passed the checks.
+
+## what it's good at, and what it isn't.
+
+**Good at:** big single gestures on any body plan: roars, slams, rearing up, chest beats, stomps, taking off. Walks and
+runs work on two and four legs. You get a real animation on a real skeleton, in a file any engine plays.
+
+**Not good at:**
+
+- **Eight-legged walking.** The two views disagree about which legs are up (0.36-0.49). Scorpions and spiders can rear,
+  bite and strike, but they don't walk.
+- **Lying down.** The reader learns from random poses inside the joint limits, which don't include lying on a side.
+- **Bird wings.** The eagle's wings don't fit (15-30 px off), and it was left out of the nine. Bat-like wings do fit, on
+  the dragon and the demon.
+- **Tail swipes.** The two views disagree about where the tail tip is. The T-rex's was dropped after six tries.
+- **Fine foot contact.** Feet slide 1 to 2 cm a step and nothing pins them yet. That's fine for most uses, and visible up
+  close.
+- **Fast runs.** Runs look like fast walks in places: the video model doesn't lower the body on a run.
+- **Moving an animation to another creature.** An animation only fits the creature it was made for, and a new model
+  needs a new reader.
+- **Light files.** Generated creatures are 55,000 to 60,000 triangles with 4K textures, which is heavy for a browser
+  game, and there are no lighter versions yet.
 
 ## how it works.
 
@@ -32,13 +68,14 @@ the agent skills to run it.
 | <img src="docs/steps/step-7.png" width="320" alt="The two views stood up as walls at a right angle, the nose ringed on both, and the two lines meeting at the nose in 3D."> | **7 · two views, 3d.**<br>Stand the two views up as walls at a right angle: each joint is where its two lines meet. The front gives side to side, the side gives nose to tail.<br><sub>x from the front, y from the side, z from both</sub> |
 | <img src="docs/steps/step-8.png" width="320" alt="The rig as an x-ray, its bones landed on the 3D points, stray points in grey."> | **8 · the rig follows.**<br>The rig bends its bones onto the points, ignores the strays, and exports for any engine.<br><sub>glb, 24 fps, no hand edits · under a minute a clip</sub> |
 
+Then the best takes become one file, with seamless loops and root motion ([docs/PACKS.md](docs/PACKS.md)).
 [docs/PIPELINE.md](docs/PIPELINE.md) has the file-by-file version.
 
 ## quick start.
 
-You need an NVIDIA GPU with CUDA (24 GB to train a reader; reading and fitting need much less), Python 3.11,
-[Blender](https://www.blender.org) 5.x on your `PATH` (or `BLENDER=/path/to/blender`), and a [fal](https://fal.ai) key
-to make new clips.
+You need an NVIDIA GPU with CUDA (12 GB to train a reader, 24 GB is safer; reading and fitting need much less), Python
+3.11, [Blender](https://www.blender.org) 5.x on your `PATH` (or `BLENDER=/path/to/blender`), and a
+[fal](https://fal.ai) key to make new clips.
 
 ```bash
 git clone https://github.com/Patch-gg/anymove && cd anymove
@@ -48,8 +85,23 @@ python3.11 -m venv .venv
 cp .env.example .env                                  # then add your FAL_KEY; git ignores .env
 ```
 
+**On Windows,** use [Git Bash](https://git-scm.com/downloads/win), and the same commands with the venv's other folder.
+Every `tools/*.sh` finds the venv and handles Blender's paths and Python's line endings. Blender usually isn't on your
+`PATH`, so point at it:
+
+```bash
+git clone https://github.com/Patch-gg/anymove && cd anymove
+py -3.11 -m venv .venv
+.venv/Scripts/pip install torch==2.11.0 --index-url https://download.pytorch.org/whl/cu128
+.venv/Scripts/pip install -r requirements.txt
+cp .env.example .env
+export BLENDER="/c/Program Files/Blender Foundation/Blender 5.2/blender.exe"
+```
+
+Where a command below says `.venv/bin/python`, use `.venv/Scripts/python.exe`.
+
 Fit the dragon's roar on the CPU, no Blender or downloads needed. The repo carries the joints its reader found in the
-clip; this fits the rig to them (about 20 seconds) and prints how well the two views agree:
+clip; this fits the rig to them (about a minute and a half) and prints how well the two views agree:
 
 ```bash
 mkdir -p runs/dragon/clips/roar
@@ -67,7 +119,8 @@ tools/capture.sh dragon runs/dragon/videos/roar/s1/h3max.mp4 roar
 # runs/dragon/clips/roar/render/animation.glb, and showcase.mp4 to compare it with the clip
 ```
 
-A new move for the same dragon (two clips, about $0.52 on fal):
+A new move for the same dragon (two clips, about $0.52 on fal; expect to need more, since a usable move took about 7
+clips on average):
 
 ```bash
 .venv/bin/python tools/make_prompt.py assets/dragon "the dragon whips its tail from side to side, then stands still." prompts/dragon/tailwhip.txt
@@ -87,10 +140,29 @@ tools/rig.sh <name>               # build, skin, paint, reference frame
 tools/dataset.sh <name>           # 2,200 random poses, about 25 min
 tools/train.sh <name>             # the joint reader, about 20 min
 tools/film.sh <name> <move>       # after tools/make_prompt.py writes prompts/<name>/<move>.txt
-tools/capture.sh <name> runs/<name>/videos/<move>/s1/h3max.mp4 <move>
+tools/capture.sh <name> runs/<name>/videos/<move>/s1/h3max.mp4 <move>_s1
+.venv/bin/python tools/score_takes.py <name>   # which takes pass the checks
+tools/pack.sh <name>                           # after listing the keepers in picks/<name>.json: one GLB with every move
 ```
 
-The skills below walk an agent (or you) through each step, with the checks that tell a good capture from a bad one.
+`tools/make_mesh.py` makes the picture and the mesh on fal, if you don't have a model. The skills below walk an agent (or
+you) through each step, with the checks that tell a good capture from a bad one.
+
+## publish it on patch.
+
+Put your creature in a browser game or a mod and publish it on [Patch](https://patch.gg), where people play and remix
+games and mods. Install `pch`, Patch's command line, then restart your coding agent and ask it to publish the game: the
+install gives every agent on your PC Patch's tools. Or run it yourself:
+
+```bash
+npm i -g @patchgg/cli      # or: curl -fsSL https://patch.gg/install.sh | sh
+pch login
+pch init                   # in your game's folder; it says what's next
+pch publish
+```
+
+Publishing needs [Patch Desktop](https://docs.patch.gg/get-started) open on a Windows PC: it plays the game once to test
+it before it goes live. Check [the licences](#licence) of the models you used first.
 
 ## agent skills.
 
@@ -108,6 +180,7 @@ anymove is a [Claude Code](https://code.claude.com) plugin and its own marketpla
 | `anymove-film` | writing the prompt, generating clips on fal, checking them before capture |
 | `anymove-reader` | rendering the dataset, training the reader, the exam in centimetres |
 | `anymove-capture` | reading, fitting, the quality gates, fixing bad fits, showcase renders |
+| `anymove-pack` | choosing takes, seamless loops, root motion, foot slide, the final GLB |
 | `anymove-lora` | training and testing the MiniMax H3 LoRA on fal |
 
 They're plain [Agent Skills](https://agentskills.io) (`skills/<name>/SKILL.md`), so other agents can load them from that
@@ -126,25 +199,49 @@ Reader error is the held-out mean on the 720-row frame; the demon stands 412 px 
 height. Every clip in the table is MiniMax H3 Max. The exam renders a made-up motion with known joints in the same
 studio and reads it back.
 
+Then one run made ten more creatures. What's in each pack, with the worst foot slide across its walk and run:
+
+| creature | moves | worst slide | | creature | moves | worst slide |
+|---|---|---|---|---|---|---|
+| T-rex | 7 | 2.26 cm | | ogre | 6 | 1.15 cm |
+| knight | 7 | 1.88 cm | | ape | 5 | 1.40 cm |
+| centaur | 7 | 1.62 cm | | horse | 5 | 1.64 cm |
+| mech | 7 | 2.12 cm | | woman | 4 | 1.36 cm |
+| scorpion | 4 | no walk | | eagle | 1 (left out) | |
+
+Their choices, and each clip's seed and prompt, are in [`picks/`](picks).
+
 ## what it costs.
+
+A clip's price isn't a move's price, because most moves take several tries. These are the real numbers from the run
+that made ten creatures, on fal and rented GPUs:
 
 | | |
 |---|---|
-| a mesh, Tripo H3.1 with HD texture | $0.40 |
-| a 5 s two-camera clip, MiniMax H3 Max | about $0.26 (H3: $0.30) |
-| training renders, 2,200 poses x 2 views | about 25 min on one RTX 4090 |
-| the joint reader, 20 epochs | 17-20 min, 12 GB |
-| reading a clip / fitting it | 10 s / under a minute (20 s for the dragon's roar on a CPU) |
-| the H3 LoRA, 1,200 steps on fal | about $12, about 2 h |
+| **a usable move, all in** | **about $3** |
+| its clips alone | about $1.80, about 7 clips |
+| **a new creature with about 5 moves, all in** | **about $17** ($110 of AI services and about $55-65 of cloud GPU, across 10 creatures) |
+| the same on your own card | about $11 of AI services |
+| captured clips that pass the checks | 58% (193 of 335) |
 
-Prices on fal as of October 2026.
+What goes into that:
+
+| | |
+|---|---|
+| a concept picture and a mesh, Tripo H3.1 with HD texture | about $0.50, more if the first mesh comes back wrong |
+| a 5 s two-camera clip, MiniMax H3 Max | about $0.26 (H3: $0.30) |
+| placing the skeleton | your or your agent's time; nobody has timed it |
+| training renders and the joint reader | about 75 min on one RTX 4090, 10 min of training on a cloud H100 |
+| reading a clip / fitting it | about 12 s / about 45 s (about 90 s for the dragon's roar on a CPU) |
+| exporting the GLB and renders | about 3 min a clip |
+| the optional H3 LoRA, 1,200 steps on fal | about $12, about 2 h |
+
+Prices on fal as of October 2026. After a creature's first move, each new one only needs clips and capture.
 
 ## limits.
 
-- **Eight-legged walking doesn't fit.** The two views disagree about which legs are up (0.36-0.49). Big single
-  gestures work best: rearing, roaring, slamming, taking off, pouncing.
-- **Lying down doesn't fit.** The reader learns from random poses inside the joint limits, which don't include lying on
-  a side; the wolf's death and lie-down clips failed.
+[What it isn't good at](#what-its-good-at-and-what-it-isnt) comes first. And:
+
 - **Skeletons are placed by hand** on grid views (`tools/prep.sh`, `tools/rig.sh preview`). UniRig could do it; its
   install pulls prebuilt flash-attn wheels.
 - **Video models drift.** Plain MiniMax H3 swapped the limb colours on 2 of 5 wolf clips; with the LoRA, 0 of 5 (one
@@ -152,8 +249,11 @@ Prices on fal as of October 2026.
 - **The LoRA's data is AI-derived.** Its training clips re-render motions solved from AI clips, so the halves are in
   sync by construction but the motion itself is AI-made. Real dog mocap exists (AI4Animation) under a non-commercial
   licence.
-- **Ground contact is wolf- and dragon-shaped.** The solver's ground term knows paw names `fpaw`, `ftoe`, `hpaw`,
-  `htoe`; other creatures fit without it.
+- **Mirrored arms need their own limits.** `_L` and `_R` bones share a local Z axis, so one sideways limit is wrong for
+  one side. Give `upperarm_L` and `upperarm_R` mirrored Z ranges in `rig.json`
+  ([anymove-rig](skills/anymove-rig/SKILL.md)).
+- **Overhead moves can leave the frame.** The layout's height needs room for the biggest move, or the prompt has to keep
+  limbs low.
 - **Fur and cloth** need extra bones: springs (`apply_motion.py --springs`) or tracked tips (the wolf's tracked fur read
   7-28° swings from the video).
 
@@ -163,7 +263,8 @@ Apache-2.0, see [LICENSE](LICENSE). The Patch name, mark, wordmark and Patch Pix
 by it. Other companies' marks in this README belong to their owners and are shown only to credit their tools (icons
 from [lobe-icons](https://github.com/lobehub/lobe-icons), MIT, and [Simple Icons](https://simpleicons.org), CC0).
 MiniMax H3's open weights carry a community licence and hosted use on fal goes through fal's terms: check both before
-shipping what you make with them. The wolf LoRA in the release (`lora-wolf-twocam-h3.safetensors`) is a LoRA on
+shipping what you make with them. What you make doesn't automatically get the licence of anything here, including the
+CC0 on Patch's nine creatures: its terms depend on the models you use and the keys you use them with. The wolf LoRA in the release (`lora-wolf-twocam-h3.safetensors`) is a LoRA on
 MiniMax H3, so MiniMax H3's community licence applies to it, not Apache-2.0.
 
 ## credits.

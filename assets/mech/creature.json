@@ -1,0 +1,112 @@
+{
+ "name": "mech",
+ "prep": {
+  "length_m": 4.0,
+  "rotz_deg": -90,
+  "axis": "z"
+ },
+ "noun": "two-legged walking mech",
+ "rigid": true,
+ "layout": {
+  "W_FRONT": 640,
+  "W_SIDE": 640,
+  "M_PER_PX": 0.0075,
+  "GROUND_V": 640
+ },
+ "paint": {
+  "AL": {
+   "color": "#F53CD1",
+   "bones": [
+    "upperarm_L",
+    "forearm_L",
+    "hand_L"
+   ]
+  },
+  "AR": {
+   "color": "#2F6BFF",
+   "bones": [
+    "upperarm_R",
+    "forearm_R",
+    "hand_R"
+   ]
+  },
+  "LL": {
+   "color": "#FFD21F",
+   "bones": [
+    "thigh_L",
+    "shin_L",
+    "metatarsus_L",
+    "toe_L",
+    "spur_L"
+   ]
+  },
+  "LR": {
+   "color": "#19D3E0",
+   "bones": [
+    "thigh_R",
+    "shin_R",
+    "metatarsus_R",
+    "toe_R",
+    "spur_R"
+   ]
+  }
+ },
+ "feet": [
+  "ball_L",
+  "ball_R",
+  "handtip_L",
+  "handtip_R"
+ ],
+ "contacts": [
+  "ball_L",
+  "ball_R",
+  "toetip_L",
+  "toetip_R",
+  "spurtip_L",
+  "spurtip_R"
+ ],
+ "describe": "a heavy two-legged walking mech built from rigid industrial yellow and dark grey armoured panels, a boxy cockpit body, reverse-jointed bird-like legs with big three-toed feet and two short arms with clamp hands",
+ "colour_code": "left arm pink, right arm blue, left leg yellow, right leg cyan",
+ "count": "Exactly two arms, two legs, one cockpit body. No guns, no missiles, no smoke, no sparks, no pilot.",
+ "flank": "side",
+ "limbs": "limbs",
+ "testpose": {
+  "thigh_L": [
+   -40,
+   0,
+   0
+  ],
+  "shin_L": [
+   50,
+   0,
+   0
+  ],
+  "metatarsus_L": [
+   -40,
+   0,
+   0
+  ],
+  "upperarm_R": [
+   -70,
+   0,
+   0
+  ],
+  "forearm_R": [
+   -60,
+   0,
+   0
+  ],
+  "chest": [
+   0,
+   20,
+   0
+  ],
+  "thigh_R": [
+   20,
+   0,
+   0
+  ]
+ },
+ "fix_front_swaps": true,
+  "camera": {"cam": "-14.206,-10.345,6.751", "target": "-0.025,0.200,2.388", "lens": 40}
+}

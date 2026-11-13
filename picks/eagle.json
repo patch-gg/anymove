@@ -1,0 +1,21 @@
+{
+ "Idle": {
+  "take": "idle_s1",
+  "loop": true,
+  "skip": 24,
+  "cycle": [
+   48,
+   96
+  ]
+ },
+ "Walk": {
+  "take": "walk_s3",
+  "loop": true,
+  "locomotion": true,
+  "cycle": [
+   16,
+   80
+  ],
+  "flagged": true
+ }
+}

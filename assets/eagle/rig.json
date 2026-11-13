@@ -1,0 +1,28 @@
+{
+  "note": "Golden eagle (overnight), metres, faces -Y, its left is +X; symmetric. Wings: arm, forearm, upper and lower primaries, secondaries.",
+  "joints": {
+    "hips": [0, 0.02, 0.48], "spine1": [0, -0.05, 0.68], "chest": [0, -0.12, 0.85], "neck": [0, -0.2, 0.92],
+    "head": [0, -0.3, 1.0], "beak": [0, -0.48, 0.93],
+    "tail1": [0, 0.1, 0.45], "tail2": [0, 0.27, 0.33], "tail_tip": [0, 0.45, 0.2],
+    "wshoulder_L": [0.16, 0.0, 0.88], "welbow_L": [0.42, 0.08, 1.0], "wwrist_L": [0.72, 0.19, 1.24],
+    "f1_L": [1.0, 0.27, 1.5], "f2_L": [1.04, 0.26, 1.16], "f3_L": [0.55, 0.15, 0.66],
+    "hip_L": [0.08, 0.0, 0.48], "hock_L": [0.115, -0.04, 0.27], "foot_L": [0.17, -0.13, 0.11], "toetip_L": [0.22, -0.3, 0.03]
+  },
+  "bones": [
+    ["pelvis", "hips", "spine1", null], ["spine1", "spine1", "chest", "pelvis"], ["chest", "chest", "neck", "spine1"],
+    ["neck", "neck", "head", "chest"], ["head", "head", "beak", "neck"],
+    ["tail1", "tail1", "tail2", "pelvis"], ["tail2", "tail2", "tail_tip", "tail1"],
+    ["wing_arm_L", "wshoulder_L", "welbow_L", "chest"], ["wing_fore_L", "welbow_L", "wwrist_L", "wing_arm_L"],
+    ["finger1_L", "wwrist_L", "f1_L", "wing_fore_L"], ["finger2_L", "wwrist_L", "f2_L", "wing_fore_L"],
+    ["secondary_L", "welbow_L", "f3_L", "wing_fore_L"],
+    ["thigh_L", "hip_L", "hock_L", "pelvis"], ["tarsus_L", "hock_L", "foot_L", "thigh_L"], ["toe_L", "foot_L", "toetip_L", "tarsus_L"]
+  ],
+  "limits_deg": {
+    "pelvis": [[-40, 40], [-20, 20], [-30, 30]], "spine1": [[-20, 20], [-10, 10], [-15, 15]], "chest": [[-20, 20], [-10, 10], [-15, 15]],
+    "neck": [[-45, 45], [-30, 30], [-40, 40]], "head": [[-40, 40], [-30, 30], [-40, 40]],
+    "tail1": [[-40, 40], [-15, 15], [-30, 30]], "tail2": [[-30, 30], [-10, 10], [-25, 25]],
+    "wing_arm": [[-80, 80], [-40, 40], [-80, 80]], "wing_fore": [[-80, 80], [-30, 30], [-80, 80]],
+    "finger1": [[-40, 40], [-20, 20], [-40, 40]], "finger2": [[-40, 40], [-20, 20], [-40, 40]], "secondary": [[-35, 35], [-15, 15], [-35, 35]],
+    "thigh": [[-70, 50], [-15, 15], [-25, 25]], "tarsus": [[-30, 100], [-10, 10], [-15, 15]], "toe": [[-60, 60], [-10, 10], [-10, 10]]
+  }
+}

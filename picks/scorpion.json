@@ -1,0 +1,28 @@
+{
+ "Idle": {
+  "take": "idle_s1",
+  "loop": true,
+  "skip": 24,
+  "cycle": [
+   48,
+   96
+  ],
+  "flagged": true
+ },
+ "Attack": {
+  "take": "attack_s1"
+ },
+ "Hit": {
+  "take": "hit_s2"
+ },
+ "Jump": {
+  "take": "jump_s2"
+ },
+ "Sting": {
+  "take": "sting_s1",
+  "flagged": true
+ },
+ "ClawSnap": {
+  "take": "clawsnap_s1"
+ }
+}

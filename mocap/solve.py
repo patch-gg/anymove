@@ -24,9 +24,34 @@ from mocap import layout
 LEGS = {"F": ["scap", "shoulder", "elbow", "wrist", "fpaw", "ftoe"], "H": ["hip", "knee", "hock", "hpaw", "htoe"]}
 
 
-def leg_pairs(names):
-    """Index pairs (left, right) of every leg joint, grouped per front/hind pair."""
+def creature():
+    """creature.json of MOCAP_CREATURE, or {} (the wolf's defaults apply)."""
+    import os, pathlib
+    cfg = pathlib.Path(os.environ.get("MOCAP_CREATURE", "")) / "creature.json"
+    return json.load(open(cfg)) if os.environ.get("MOCAP_CREATURE") and cfg.exists() else {}
+
+
+def leg_pairs(names, info=None):
+    """Index pairs (left, right) of every limb joint, grouped per left/right pair of limbs. The limbs are creature.json
+    "paint" groups whose bones mirror each other (_L/_R); without paint, the wolf's front and hind legs."""
+    paint = creature().get("paint", {})
     out = {}
+    if paint and info is not None:
+        ends = {b["name"]: (b["head_joint"], b["tail_joint"]) for b in info["bones"]}
+        for k, g in paint.items():
+            left = [b for b in g["bones"] if b.endswith("_L")]
+            if not left:
+                continue
+            pairs = []
+            for b in left:
+                for j in ends.get(b, ()):
+                    if j.endswith("_L") and j in names and j[:-2] + "_R" in names:
+                        p = (names.index(j), names.index(j[:-2] + "_R"))
+                        if p not in pairs:
+                            pairs.append(p)
+            if pairs:
+                out[k] = pairs
+        return out
     for k, stems in LEGS.items():
         pairs = []
         for s in stems:
@@ -36,23 +61,134 @@ def leg_pairs(names):
     return out
 
 
-def fix_swaps(d, names, margin=4.0):
-    """Swap near/far legs in the side view where the heights say the reader mixed them up."""
+def fix_swaps(d, names, info=None, margin=4.0, apply=True):
+    """Swap near/far limbs in the side view where the heights say the reader mixed them up. With apply=False, only
+    count the frames where a swap would agree better (a warning sign for the clip)."""
     fv, sv = d["front_uv"][..., 1], d["side_uv"][..., 1]
     c = np.minimum(d["front_conf"], d["side_conf"]).clip(0, 1)
     swapped = {}
-    for k, pairs in leg_pairs(names).items():
+    for k, pairs in leg_pairs(names, info).items():
         L, R = np.array(pairs).T
         same = (c[:, L] * np.abs(sv[:, L] - fv[:, L]) + c[:, R] * np.abs(sv[:, R] - fv[:, R])).sum(1)
         swap = (c[:, L] * np.abs(sv[:, R] - fv[:, L]) + c[:, R] * np.abs(sv[:, L] - fv[:, R])).sum(1)
         gain = (same - swap) / len(pairs)
         gain = np.array([np.median(gain[max(0, t - 2):t + 3]) for t in range(len(gain))])
         do = gain > margin
-        for t in np.where(do)[0]:
-            d["side_uv"][t, L], d["side_uv"][t, R] = d["side_uv"][t, R].copy(), d["side_uv"][t, L].copy()
-            d["side_conf"][t, L], d["side_conf"][t, R] = d["side_conf"][t, R].copy(), d["side_conf"][t, L].copy()
+        if apply:
+            for t in np.where(do)[0]:
+                d["side_uv"][t, L], d["side_uv"][t, R] = d["side_uv"][t, R].copy(), d["side_uv"][t, L].copy()
+                d["side_conf"][t, L], d["side_conf"][t, R] = d["side_conf"][t, R].copy(), d["side_conf"][t, L].copy()
         swapped[k] = int(do.sum())
     return swapped
+
+
+def fix_front_swaps(d, names, info, margin=6.0):
+    """Leg swaps in the front view. The creature's left is the image's right there, so a leg joint read left of its
+    right twin was swapped (unpainted feet look alike); swap it back. Then a reading that sits further from its
+    limb's parent joint than the bone could reach is dropped (confidence near 0): two labels on one foot."""
+    cidx, _ = contact_joints(info, names)
+    contacts = {names[i] for i in cidx}
+    groups = [g for g in leg_pairs(names, info).values() if any(names[a] in contacts or names[b] in contacts for a, b in g)]
+    fu = d["front_uv"][..., 0]
+    swapped = 0
+    for g in groups:
+        for L, R in g:
+            m = fu[:, L] < fu[:, R] - margin
+            for k in ("front_uv", "front_conf"):
+                a = d[k][m, L].copy(); d[k][m, L] = d[k][m, R]; d[k][m, R] = a
+            swapped += int(m.sum())
+    fu = d["front_uv"][..., 0]
+    dropped = 0
+    leg = {i for g in groups for pair in g for i in pair}
+    for b in info["bones"]:
+        h, t = b["head_joint"], b["tail_joint"]
+        if h in names and t in names and names.index(t) in leg:
+            hi, ti = names.index(h), names.index(t)
+            far = np.abs(fu[:, ti] - fu[:, hi]) > 1.3 * b["length"] / layout.M_PER_PX + margin
+            d["front_conf"][far, ti] *= 0.05
+            dropped += int(far.sum())
+    return {"swapped": swapped, "dropped": dropped}
+
+
+def contact_joints(info, names):
+    """The joints that touch the ground when the creature stands: creature.json "contacts" if given, else every joint
+    of a painted limb (or a "feet" joint) that sits near the ground in the rest pose (hooves, toes, knuckles, claw
+    tips). Returns their indices and rest heights."""
+    cfg = creature()
+    rest = {k["name"]: k["rest"] for k in info["keypoints"]}
+    if "contacts" in cfg:
+        cand = [n for n in cfg["contacts"] if n in names]
+    else:
+        tall = max(r[2] for r in rest.values())
+        near = max(0.06, 0.05 * tall)
+        limb = set(cfg.get("feet", []))
+        for g in cfg.get("paint", {}).values():
+            for b in info["bones"]:
+                if b["name"] in g["bones"]:
+                    limb |= {b["head_joint"], b["tail_joint"]}
+        if not cfg.get("paint"):
+            limb |= {n for n in names if n.startswith(("fpaw", "ftoe", "hpaw", "htoe"))}
+        cand = [n for n in names if n in limb and rest[n][2] < near]
+    idx = [names.index(n) for n in cand]
+    return idx, np.array([rest[n][2] for n in cand], float)
+
+
+def runs(mask, fill=2, shortest=4):
+    """Clean a boolean contact track: close gaps of up to `fill` frames, drop contacts shorter than `shortest`."""
+    m = mask.copy()
+    T = len(m)
+    t = 0
+    while t < T:  # close short gaps between contacts
+        if not m[t]:
+            e = t
+            while e < T and not m[e]:
+                e += 1
+            if 0 < t and e < T and e - t <= fill:
+                m[t:e] = True
+            t = e
+        else:
+            t += 1
+    out, t = [], 0
+    while t < T:
+        if m[t]:
+            e = t
+            while e < T and m[e]:
+                e += 1
+            if e - t >= shortest:
+                out.append((t, e))
+            t = e
+        else:
+            t += 1
+    return out
+
+
+def find_contacts(J, cidx, h0, fps=24, hysteresis=1.0):
+    """Planted frames per contact joint from a first fit, and the ground's own velocity: on a clip filmed "on the spot"
+    the planted feet ride backwards together like on a treadmill, so a foot is planted when it is near its rest
+    height and moving with the others. Returns per-joint lists of (start, end) frame runs and the ground velocity in
+    metres per frame (x, y)."""
+    P = J[:, cidx]
+    T = len(P)
+    tall = float(np.abs(J[..., 2]).max())
+    tol_z = max(0.02, 0.015 * tall)
+    tol_v = max(0.008, 0.006 * tall) * 24 / fps
+    v = np.gradient(P[..., :2], axis=0)
+    near = (P[..., 2] - h0[None]) < tol_z
+    g = np.median(v[near], axis=0) if near.sum() >= 10 else np.zeros(2)
+    if np.linalg.norm(g) < 0.25 * tol_v:
+        g = np.zeros(2)
+    rel = np.linalg.norm(v - g, axis=-1)
+    planted = near & (rel < tol_v)
+    if hysteresis > 1:  # grow each plant while the foot stays down and only a little faster (the whole stance, not its still core)
+        loose = (P[..., 2] - h0[None]) < tol_z * hysteresis
+        loose &= rel < tol_v * hysteresis
+        for k in range(len(cidx)):
+            grown = np.zeros(T, bool)
+            for a, b in runs(loose[:, k]):
+                if planted[a:b, k].any():
+                    grown[a:b] = True
+            planted[:, k] = grown
+    return [runs(planted[:, k]) for k in range(len(cidx))], g
 
 
 def height_features(uv, conf, names):
@@ -305,7 +441,8 @@ def ik_init(tri, root_aa, info, rig):
     return eul
 
 
-def fit(d, info, iters=1500, dev="cpu", log=True, front_height_weight=0.25):
+def fit(d, info, iters=1500, dev="cpu", log=True, front_height_weight=0.25, fps=24, plant_iters=600, plant=True,
+        far_side_weight=1.0, joint_weight=None, joint_sigma=None, plant_hysteresis=1.0):
     rig = Rig(info, dev)
     names = rig.kp_names
     T = len(d["front_uv"])
@@ -313,6 +450,18 @@ def fit(d, info, iters=1500, dev="cpu", log=True, front_height_weight=0.25):
     s_obs = torch.tensor(d["side_uv"], dtype=torch.float64, device=dev)
     f_c = torch.tensor(d["front_conf"], dtype=torch.float64, device=dev).clamp(0, 1) ** 2
     s_c = torch.tensor(d["side_conf"], dtype=torch.float64, device=dev).clamp(0, 1) ** 2
+    jw = torch.ones(len(names), dtype=torch.float64, device=dev)  # per-joint data weight and robust-scale multiplier
+    js = torch.ones(len(names), dtype=torch.float64, device=dev)
+    for spec, vec in ((joint_weight, jw), (joint_sigma, js)):
+        for pre, val in (spec or {}).items():
+            for i, n in enumerate(names):
+                if n.startswith(pre):
+                    vec[i] = val
+    f_c = f_c * jw
+    s_c = s_c * jw
+    if far_side_weight != 1.0:  # the side camera sees the right flank: _L joints are behind the body there
+        far = [i for i, n in enumerate(names) if n.endswith("_L")]
+        s_c[:, far] *= far_side_weight
     tri_np = triangulate(d, front_height_weight)
     tri = torch.tensor(tri_np, dtype=torch.float64, device=dev)
     hips = names.index(info["bones"][0]["head_joint"])
@@ -325,7 +474,10 @@ def fit(d, info, iters=1500, dev="cpu", log=True, front_height_weight=0.25):
     e0 = torch.tensor(ik_init(tri_np, root0, info, rig), dtype=torch.float64, device=dev)
     z = ((e0 - rig.lo) / (rig.hi - rig.lo)).clamp(1e-3, 1 - 1e-3)
     phi = torch.logit(z).clone().requires_grad_(True)
-    paws = [names.index(n) for n in names if any(n.startswith(p) for p in ("fpaw", "ftoe", "hpaw", "htoe"))]
+    # ground contact from creature.json (contact_joints): never below their rest height, and planted in stage 2
+    cidx, h0 = contact_joints(info, names)
+    h0_t = torch.tensor(h0, dtype=torch.float64, device=dev)
+    plant_target, plant_w = None, None
     sigma = 6.0  # px, robust scale (annealed down from 40 px so far-off joints still pull early on)
     # The side view sees legs swing and the hips clearly; the front view foreshortens leg lifts and hides the hips
     # when the creature sits, and video models animate it less faithfully. So heights come mostly from the side
@@ -339,13 +491,18 @@ def fit(d, info, iters=1500, dev="cpu", log=True, front_height_weight=0.25):
         pf, ps = project(J)
         rf = ((pf - f_obs) ** 2 * f_axis).sum(-1)
         rs = ((ps - s_obs) ** 2).sum(-1)
-        data = (f_c * torch.log1p(rf / sigma ** 2)).sum() + (s_c * torch.log1p(rs / sigma ** 2)).sum()
+        sj = (sigma * js) ** 2  # a joint with a wider robust scale is not written off as an outlier when it is far off
+        data = (f_c * torch.log1p(rf / sj)).sum() + (s_c * torch.log1p(rs / sj)).sum()
         acc = ((J[2:] - 2 * J[1:-1] + J[:-2]) ** 2).sum() / layout.M_PER_PX ** 2 * 0.02
         vel = ((eul[1:] - eul[:-1]) ** 2).sum() * 2.0 + ((root[1:] - root[:-1]) ** 2).sum() * 2.0
         prior = (eul ** 2).sum() * 0.05
-        ground = (torch.relu(-J[:, paws, 2]) ** 2).sum() / layout.M_PER_PX ** 2 * 0.5
-        total = data + acc + vel + prior + ground
-        return total, {"data": data.item(), "acc": acc.item(), "vel": vel.item(), "prior": prior.item(), "ground": ground.item()}, J, pf, ps, eul
+        ground = (torch.relu(h0_t - 0.01 - J[:, cidx, 2]) ** 2).sum() / layout.M_PER_PX ** 2 * 0.5 if cidx else J.sum() * 0
+        planted = J.sum() * 0
+        if plant_target is not None:  # planted feet stay where they landed (moving only with the ground)
+            planted = (plant_w * ((J[:, cidx] - plant_target) ** 2).sum(-1)).sum() / layout.M_PER_PX ** 2 * 0.5
+        total = data + acc + vel + prior + ground + planted
+        return total, {"data": data.item(), "acc": acc.item(), "vel": vel.item(), "prior": prior.item(), "ground": ground.item(),
+                       "planted": planted.item()}, J, pf, ps, eul
 
     opt = torch.optim.Adam([{"params": [trans], "lr": 0.01}, {"params": [root], "lr": 0.03}, {"params": [phi], "lr": 0.05}])
     for it in range(iters):
@@ -360,15 +517,63 @@ def fit(d, info, iters=1500, dev="cpu", log=True, front_height_weight=0.25):
         if log and it % 250 == 0:
             print(f"  iter {it} loss {total.item():.1f}", {k: round(v, 1) for k, v in parts.items()}, flush=True)
     sigma = 6.0
+    runs_, g = [[] for _ in cidx], np.zeros(2)
+    if plant and cidx:
+        # stage 2: find where each contact joint is planted in the first fit, then hold it there while refitting
+        runs_, g = find_contacts(J.detach().cpu().numpy(), cidx, h0, fps, plant_hysteresis)
+        tgt = np.zeros((T, len(cidx), 3))
+        w = np.zeros((T, len(cidx)))
+        Jn = J.detach().cpu().numpy()
+        for k, rr in enumerate(runs_):
+            for a, b in rr:
+                t = np.arange(a, b)
+                xy = Jn[a:b, cidx[k], :2]
+                p0 = (xy - g[None] * (t - a)[:, None]).mean(0)
+                tgt[a:b, k, :2] = p0 + g[None] * (t - a)[:, None]
+                tgt[a:b, k, 2] = h0[k]
+                w[a:b, k] = 1.0
+                w[a, k] = w[b - 1, k] = 0.5  # ease in and out of the plant
+        plant_target = torch.tensor(tgt, dtype=torch.float64, device=dev)
+        plant_w = torch.tensor(w, dtype=torch.float64, device=dev)
+        for it in range(plant_iters):
+            total, parts, J, pf, ps, eul = loss_fn(iters + it)
+            opt.zero_grad()
+            total.backward()
+            opt.step()
+            if log and it % 200 == 0:
+                print(f"  plant iter {it} loss {total.item():.1f}", {k: round(v, 1) for k, v in parts.items()}, flush=True)
+        if log:
+            print(f"planted contacts: {sum(len(r) for r in runs_)} plants over {len(cidx)} contact joints, "
+                  f"ground velocity {np.round(g * fps, 3).tolist()} m/s")
     with torch.no_grad():
         total, parts, J, pf, ps, eul = loss_fn(iters)
+        slide = foot_slide(J.cpu().numpy(), cidx, runs_, g)
         err_f = (pf - f_obs).norm(dim=-1)
         err_fx = (pf - f_obs)[..., 0].abs()
         err_s = (ps - s_obs).norm(dim=-1)
-    return {"trans": trans.detach().cpu().numpy(), "root_rotmat": axis_angle(root).detach().cpu().numpy(),
+        okf, oks = f_c > 0.3 ** 2, s_c > 0.3 ** 2  # readings the reader was sure of (conf > 0.3)
+        confident = {"front": float(err_f[okf].mean()), "front_x_only": float(err_fx[okf].mean()),
+                     "side": float(err_s[oks].mean())}
+    return {"reproj_confident_px": confident, "trans": trans.detach().cpu().numpy(), "root_rotmat": axis_angle(root).detach().cpu().numpy(),
             "euler": eul.detach().cpu().numpy(), "joints": J.cpu().numpy(),
             "reproj_px": {"front": float(err_f.mean()), "front_x_only": float(err_fx.mean()), "side": float(err_s.mean())},
-            "bones": rig.names, "joint_names": names}
+            "bones": rig.names, "joint_names": names,
+            "contacts": {"joints": [names[i] for i in cidx], "rest_height": h0.round(4).tolist(),
+                         "runs": [[list(map(int, r)) for r in rr] for rr in runs_], "ground_velocity": g.round(6).tolist(),
+                         "slide_cm": slide}}
+
+
+def foot_slide(J, cidx, runs_, g):
+    """How far planted contact joints still slide per frame (relative to the ground), in cm: mean and worst."""
+    d = []
+    for k, rr in enumerate(runs_):
+        for a, b in rr:
+            v = np.diff(J[a:b, cidx[k], :2], axis=0) - g[None]
+            d.append(np.linalg.norm(v, axis=-1))
+    if not d:
+        return {"mean": None, "max": None}
+    d = np.concatenate(d) * 100
+    return {"mean": round(float(d.mean()), 3), "max": round(float(d.max()), 3)}
 
 
 def to_quat(Rm):
@@ -380,6 +585,13 @@ def to_quat(Rm):
         z = np.copysign(np.sqrt(max(0, 1 - R[0, 0] - R[1, 1] + R[2, 2])) / 2, R[1, 0] - R[0, 1])
         q.append([w, x, y, z])
     return np.array(q)
+
+
+def kv(flag):
+    """--joint-weight tail=4,jaw=2 -> {"tail": 4.0, "jaw": 2.0} (joint-name prefixes)"""
+    if flag not in sys.argv:
+        return None
+    return {k: float(v) for k, v in (x.split("=") for x in sys.argv[sys.argv.index(flag) + 1].split(","))}
 
 
 def main():
@@ -467,20 +679,32 @@ def main():
         else:
             print(f"views already in step (re-timing would only cut the height gap by {gain:.0%}); left as generated")
     # painted legs make the reader's left/right labels trustworthy, so swaps are only fixed on request
-    swapped = fix_swaps(d, names) if "--fix-swaps" in sys.argv else {}
+    suspect = fix_swaps({k: v.copy() for k, v in d.items()}, names, info, apply=False)
+    print("frames where swapping near/far limbs in the side view would agree better:", suspect)
+    swapped = fix_swaps(d, names, info) if "--fix-swaps" in sys.argv else {}
+    if "--fix-front-swaps" in sys.argv or creature().get("fix_front_swaps"):
+        swapped["front"] = fix_front_swaps(d, names, info)
     sync = sync_report(d)
     print("side-view leg swaps fixed (frames):", swapped)
     print(f"sync after: mean height gap {sync['mean_height_gap_px']:.1f} px, worst {sync['worst_frame_gap_px']:.1f} px")
     sync["before"] = {k: v for k, v in before.items() if k != "per_frame_gap_px"}
     sync["paw_agreement"] = paws
     sync["front_shift_frames"] = None if shift is None else shift.round(2).tolist()
-    res = fit(d, info, iters=iters, dev=dev)
+    fhw = float(sys.argv[sys.argv.index("--front-height-weight") + 1]) if "--front-height-weight" in sys.argv else 0.25
+    res = fit(d, info, iters=iters, dev=dev, fps=float(raw["fps"]),
+              plant="--no-plant" not in sys.argv, front_height_weight=fhw,
+              far_side_weight=float(sys.argv[sys.argv.index("--far-side-weight") + 1]) if "--far-side-weight" in sys.argv else 1.0,
+              joint_weight=kv("--joint-weight"), joint_sigma=kv("--joint-sigma"),
+              plant_hysteresis=float(sys.argv[sys.argv.index("--plant-hysteresis") + 1]) if "--plant-hysteresis" in sys.argv else 1.0)
     print("reprojection error px:", {k: round(v, 2) for k, v in res["reproj_px"].items()})
+    print("reprojection error px, confident readings only:", {k: round(v, 2) for k, v in res["reproj_confident_px"].items()})
+    print("planted foot slide cm/frame:", res["contacts"]["slide_cm"])
     motion = {"fps": float(raw["fps"]), "bones": res["bones"], "trans": res["trans"].round(5).tolist(),
               "root_quat": to_quat(res["root_rotmat"]).round(6).tolist(), "euler": res["euler"].round(5).tolist(),
               "joints": res["joints"].round(4).tolist(), "joint_names": res["joint_names"],
-              "reproj_px": res["reproj_px"], "sync": sync, "swaps": swapped,
-              "calib_converged": calib_converged}
+              "reproj_px": res["reproj_px"], "reproj_confident_px": res["reproj_confident_px"],
+              "sync": sync, "swaps": swapped, "swap_suspect_frames": suspect,
+              "contacts": res["contacts"], "calib_converged": calib_converged}
     json.dump(motion, open(out, "w"))
     print("saved", out)
 

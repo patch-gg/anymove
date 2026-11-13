@@ -1,0 +1,176 @@
+{
+ "name": "scorpion",
+ "prep": {
+  "length_m": 2.6,
+  "rotz_deg": -90,
+  "axis": "y"
+ },
+ "noun": "giant scorpion",
+ "layout": {
+  "W_FRONT": 640,
+  "W_SIDE": 640,
+  "M_PER_PX": 0.0048,
+  "GROUND_V": 600
+ },
+ "paint": {
+  "CL": {
+   "color": "#F53CD1",
+   "bones": [
+    "pedi_upper_L",
+    "pedi_fore_L",
+    "chela_L",
+    "finger_fixed_L",
+    "finger_move_L"
+   ]
+  },
+  "CR": {
+   "color": "#2F6BFF",
+   "bones": [
+    "pedi_upper_R",
+    "pedi_fore_R",
+    "chela_R",
+    "finger_fixed_R",
+    "finger_move_R"
+   ]
+  },
+  "L1": {
+   "color": "#FFD21F",
+   "bones": [
+    "femur1_L",
+    "tibia1_L",
+    "tarsus1_L"
+   ]
+  },
+  "R1": {
+   "color": "#19D3E0",
+   "bones": [
+    "femur1_R",
+    "tibia1_R",
+    "tarsus1_R"
+   ]
+  },
+  "L2": {
+   "color": "#FF7A1A",
+   "bones": [
+    "femur2_L",
+    "tibia2_L",
+    "tarsus2_L"
+   ]
+  },
+  "R2": {
+   "color": "#2BD94A",
+   "bones": [
+    "femur2_R",
+    "tibia2_R",
+    "tarsus2_R"
+   ]
+  },
+  "L3": {
+   "color": "#9B4DFF",
+   "bones": [
+    "femur3_L",
+    "tibia3_L",
+    "tarsus3_L"
+   ]
+  },
+  "R3": {
+   "color": "#FF2B2B",
+   "bones": [
+    "femur3_R",
+    "tibia3_R",
+    "tarsus3_R"
+   ]
+  },
+  "L4": {
+   "color": "#F2F2F2",
+   "bones": [
+    "femur4_L",
+    "tibia4_L",
+    "tarsus4_L"
+   ]
+  },
+  "R4": {
+   "color": "#151515",
+   "bones": [
+    "femur4_R",
+    "tibia4_R",
+    "tarsus4_R"
+   ]
+  }
+ },
+ "feet": [
+  "foot1_L",
+  "foot1_R",
+  "foot2_L",
+  "foot2_R",
+  "foot3_L",
+  "foot3_R",
+  "foot4_L",
+  "foot4_R",
+  "cmove_L",
+  "cmove_R"
+ ],
+ "contacts": [
+  "foot1_L",
+  "foot1_R",
+  "foot2_L",
+  "foot2_R",
+  "foot3_L",
+  "foot3_R",
+  "foot4_L",
+  "foot4_R"
+ ],
+ "describe": "a giant scorpion with a glossy dark brown-black armoured exoskeleton and amber leg joints, two big pincer claws and a segmented tail arched over its back ending in a curved stinger",
+ "colour_code": "left claw pink, right claw blue; first left leg yellow, first right leg cyan; second left leg orange, second right leg green; third left leg purple, third right leg red; fourth left leg white, fourth right leg black",
+ "count": "Exactly eight legs, two claws, one tail with one stinger. No other creatures, no sand, no dust.",
+ "flank": "side",
+ "limbs": "limbs",
+ "testpose": {
+  "pedi_upper_L": [
+   0,
+   0,
+   30
+  ],
+  "pedi_fore_L": [
+   0,
+   0,
+   -40
+  ],
+  "finger_move_L": [
+   0,
+   0,
+   30
+  ],
+  "femur1_R": [
+   -30,
+   0,
+   0
+  ],
+  "tibia1_R": [
+   40,
+   0,
+   0
+  ],
+  "tail2": [
+   -25,
+   0,
+   0
+  ],
+  "tail4": [
+   -25,
+   0,
+   0
+  ],
+  "stinger": [
+   -30,
+   0,
+   0
+  ],
+  "femur3_L": [
+   0,
+   0,
+   30
+  ]
+ },
+  "camera": {"cam": "-8.258,-6.237,3.762", "target": "0.004,-0.094,1.220", "lens": 40}
+}

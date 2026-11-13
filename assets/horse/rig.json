@@ -1,0 +1,31 @@
+{
+  "note": "Horse (overnight), metres, faces -Y, its left is +X; symmetric. Wolf-style names: wrist = carpus, fpaw/hpaw = fetlock, ftoe/htoe = hoof tip.",
+  "joints": {
+    "hips": [0, 0.7, 1.5], "spine1": [0, 0.35, 1.5], "spine2": [0, 0.0, 1.48], "chest": [0, -0.3, 1.45],
+    "neck": [0, -0.45, 1.6], "neck2": [0, -0.62, 1.9], "head": [0, -0.83, 2.2], "nose": [0, -1.15, 1.75],
+    "tail1": [0, 0.95, 1.6], "tail2": [0, 1.08, 1.45], "tail_tip": [0, 1.15, 1.25],
+    "scap_L": [0.12, -0.25, 1.6], "shoulder_L": [0.22, -0.55, 1.25], "elbow_L": [0.23, -0.33, 1.0],
+    "wrist_L": [0.235, -0.36, 0.52], "fpaw_L": [0.255, -0.36, 0.2], "ftoe_L": [0.27, -0.5, 0.02],
+    "hip_L": [0.2, 0.7, 1.35], "knee_L": [0.24, 0.6, 0.95], "hock_L": [0.25, 0.9, 0.62],
+    "hpaw_L": [0.32, 0.91, 0.2], "htoe_L": [0.34, 0.78, 0.02]
+  },
+  "bones": [
+    ["pelvis", "hips", "spine1", null], ["spine1", "spine1", "spine2", "pelvis"], ["spine2", "spine2", "chest", "spine1"],
+    ["chest", "chest", "neck", "spine2"], ["neck1", "neck", "neck2", "chest"], ["neck2", "neck2", "head", "neck1"],
+    ["head", "head", "nose", "neck2"], ["tail1", "tail1", "tail2", "pelvis"], ["tail2", "tail2", "tail_tip", "tail1"],
+    ["scapula_L", "scap_L", "shoulder_L", "chest"], ["upperarm_L", "shoulder_L", "elbow_L", "scapula_L"],
+    ["forearm_L", "elbow_L", "wrist_L", "upperarm_L"], ["metacarpus_L", "wrist_L", "fpaw_L", "forearm_L"],
+    ["fpaw_L", "fpaw_L", "ftoe_L", "metacarpus_L"],
+    ["thigh_L", "hip_L", "knee_L", "pelvis"], ["shin_L", "knee_L", "hock_L", "thigh_L"],
+    ["metatarsus_L", "hock_L", "hpaw_L", "shin_L"], ["hpaw_L", "hpaw_L", "htoe_L", "metatarsus_L"]
+  ],
+  "limits_deg": {
+    "pelvis": [[-35, 30], [-15, 15], [-25, 25]], "spine1": [[-10, 10], [-6, 6], [-12, 12]], "spine2": [[-10, 10], [-6, 6], [-12, 12]],
+    "chest": [[-12, 12], [-6, 6], [-12, 12]], "neck1": [[-40, 40], [-15, 15], [-35, 35]], "neck2": [[-40, 40], [-15, 15], [-35, 35]],
+    "head": [[-40, 40], [-20, 20], [-30, 30]], "tail1": [[-60, 50], [-15, 15], [-50, 50]], "tail2": [[-50, 50], [-15, 15], [-50, 50]],
+    "scapula": [[-25, 25], [-5, 5], [-8, 8]], "upperarm": [[-60, 50], [-10, 10], [-15, 15]], "forearm": [[-110, 10], [-8, 8], [-10, 10]],
+    "metacarpus": [[-20, 130], [-8, 8], [-10, 10]], "fpaw": [[-50, 50], [-5, 5], [-5, 5]],
+    "thigh": [[-60, 45], [-10, 10], [-15, 15]], "shin": [[-10, 100], [-8, 8], [-10, 10]],
+    "metatarsus": [[-100, 15], [-8, 8], [-10, 10]], "hpaw": [[-50, 50], [-5, 5], [-5, 5]]
+  }
+}
